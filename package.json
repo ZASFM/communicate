@@ -16,5 +16,15 @@
   "bugs": {
     "url": "https://github.com/ZASFM/Chat-app-with-webSocket/issues"
   },
-  "homepage": "https://github.com/ZASFM/Chat-app-with-webSocket#readme"
+  "homepage": "https://github.com/ZASFM/Chat-app-with-webSocket#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.4",
+    "nodemon": "^2.0.20",
+    "socket.io": "^4.5.4"
+  }
 }

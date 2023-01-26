@@ -2,6 +2,9 @@ import { VStack } from '@chakra-ui/react';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Input, InputGroup, InputRightElement, Button } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useToast } from '@chakra-ui/react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
    const [credentials, setCredentials] = useState({
@@ -9,6 +12,8 @@ const Login = () => {
       password: "",
    })
    const [show, setShow] = useState(false);
+   const toast=useToast();
+   const navigate=useNavigate();
 
    const handleClick = () => {
       setShow(preVal => !preVal)
@@ -33,9 +38,48 @@ const Login = () => {
       })
    }
 
-   const submitHandler = (e) => {
+   const submitHandler = async(e) => {
       e.preventDefault();
-      console.log(credentials);
+      if(!credentials.email || !credentials.password){
+         toast({
+            title: 'Password is not correct',
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+            position:"bottom"
+          })
+          return;  
+      }
+      try{
+         const config={
+            headers:{
+               'Content-Type':'application/json'
+            }
+         }
+         const {data}=await axios.post('http://localhost:5000/api/v1/user/login',{
+           ...credentials  
+         },config);
+         toast({
+            title: 'Login successful',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+            position:"bottom"
+          });
+          localStorage.setItem('userinfo',JSON.stringify(data));
+          navigate('/chats');
+      }
+      catch(err){
+         console.log(err);
+         toast({
+            title: 'Error occurred.',
+            description:'Could not login',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+            position:"bottom"
+          })
+      }
    }
    return (
       <VStack spacing="5px">

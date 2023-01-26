@@ -5,7 +5,6 @@ import ChatPage from './pages/ChatPage';
 const App = () => {
   return (
     <div className='App'>
-      Nav
       <Routes>
         <Route
           path="/"

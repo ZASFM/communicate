@@ -17,7 +17,7 @@ const login=asyncHandler(async(req,res,next)=>{
       if(!confirmPassword){
          return next(createError(404,'Password is incorrect'));
       }
-      res.status(200).json({success:true,user});
+      res.status(200).json({success:true,user,token:createToken(user._id)});
    }
    catch(err){
       next(createError(404,'Could not login'));
@@ -53,7 +53,19 @@ const signup=asyncHandler(async(req,res,next)=>{
    }
 })
 
+const allUsers=asyncHandler(async(req,res,next)=>{
+   const keyword=req.query.search?{
+      $or:[
+         {name:{$regex:req.query.search, $options:'i'}},
+         {email:{$regex:req.query.search, options:'i'}}
+      ]
+   }:{}
+   const users=await User.find(keyword).find({_id:{$ne:req.user._id}});
+   res.send(users);
+})
+
 module.exports={
    login,
-   signup
+   signup,
+   allUsers
 }

@@ -5,5 +5,4 @@ const {protect}=require('../middlewares/authMiddleware');
 
 router.route('/login').post(login).get(protect,allUsers);
 router.route('/signup').post(signup);
-
 module.exports=router; 

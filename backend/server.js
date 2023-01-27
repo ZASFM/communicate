@@ -15,6 +15,7 @@ mongoose.set('strictQuery',true);
 app.use('/api/v1/user',userRouter);
 app.use('/api/v1/chat',chatRouter);
 app.use((err,req,res,next)=>{
+   console.log(err);
    const statusCode=err.statusCode||500;
    const msg=err.msg||'Something went wrong';
    res.status(statusCode).json({success:false,msg});

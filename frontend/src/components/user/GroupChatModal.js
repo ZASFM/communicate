@@ -11,6 +11,7 @@ import {
    useToast,
    FormControl,
    Input,
+   Box
 } from '@chakra-ui/react'
 import axios from "axios";
 import { useState } from "react";
@@ -153,6 +154,12 @@ const GroupChatModal = ({ children }) => {
                         onChange={(e)=>handleSearch(e.target.value)}
                      />
                   </FormControl>
+                  <Box
+                     display="flex"
+                     justifyContent="center"
+                     flexDir="row"
+                     gap="5px"
+                  >
                   {
                      selectedUsers.map(u=>(
                         <UserBadgeItem
@@ -162,6 +169,7 @@ const GroupChatModal = ({ children }) => {
                         />
                      ))
                   }
+                  </Box>
                   {loading?
                      (<div>loading</div>):
                      (searchResult?.slice(0,4).map(user=>(

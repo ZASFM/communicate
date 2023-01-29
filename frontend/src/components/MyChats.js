@@ -27,7 +27,7 @@ const MyChats = () => {
          }
 
          const { data } = await axios.get('http://localhost:5000/api/v1/chat', config);
-         console.log(data);
+         //console.log(data);
          setChats(data);
       }
       catch (err) {
@@ -103,7 +103,7 @@ const MyChats = () => {
                         <Text>
                            {!chat.isGroupChat ?
                               getSender(loggedUser, chat.users)
-                              : chat.name}
+                              : chat.chatName}
                         </Text>
                      </Box>
                   ))}

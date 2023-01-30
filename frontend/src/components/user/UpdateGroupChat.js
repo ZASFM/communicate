@@ -114,14 +114,13 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain }) => {
       }
    }
 
-   const handleRename = async (user) => {
+   const handleRename = async () => {
       if (!groupChatName) return;
       try {
          setRenameLoading(true);
          const config = {
             headers: {
                Authorization: `Bearer ${user.token}`,
-               'Content-Type':'application/json'
             }
          }
          console.log(selectedChat);

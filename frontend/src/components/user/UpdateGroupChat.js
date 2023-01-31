@@ -16,7 +16,7 @@ import { ChatState } from "../../contexts/ChatContext";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
 
-const UpdateGroupChat = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
    const { isOpen, onOpen, onClose } = useDisclosure();
    const [groupChatName, setGroupChatName] = useState('');
    const [search, setSearch] = useState("");
@@ -27,32 +27,33 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain }) => {
 
    const { user, selectedChat, setSelectedChat } = ChatState();
 
-   const handleRemove = async(userTR) => { 
-      if(selectedChat.groupAdmin.id !== user._id && userTR._id !== user._id){
+   const handleRemove = async (userTR) => {
+      if (selectedChat.groupAdmin.id !== user._id && userTR._id !== user._id) {
          toast({
             title: "Only admins can remove someone!",
             status: "error",
             duration: 5000,
             isClosable: true,
             position: "bottom",
-          });
-          return;
+         });
+         return;
       }
-      try{
+      try {
          setLoading(true);
-         const config={
-            headers:{
-               Authorization:`Bearer ${user.token}`
+         const config = {
+            headers: {
+               Authorization: `Bearer ${user.token}`
             }
          }
-         const {data}=await axios.put('http://localhost:5000/api/v1/chat/groupremove',{
-            chatId:selectedChat._id,
-            userId:userTR._id,
-         },config);
-         user._id===userTR._id?setSelectedChat():setSelectedChat(data);
+         const { data } = await axios.put('http://localhost:5000/api/v1/chat/groupremove', {
+            chatId: selectedChat._id,
+            userId: userTR._id,
+         }, config);
+         user._id === userTR._id ? setSelectedChat() : setSelectedChat(data);
          setLoading(false);
+         fetchMessages();
          setFetchAgain(!fetchAgain);
-      }catch(err){
+      } catch (err) {
          toast({
             title: "Error Occured!",
             description: err.response.data.message,
@@ -60,48 +61,48 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain }) => {
             duration: 5000,
             isClosable: true,
             position: "bottom",
-          });
-          setLoading(false);
+         });
+         setLoading(false);
       }
    }
-   const handleAddUser = async (userTA) => { 
-      if(selectedChat.users.find(u=>u._id===userTA._id)){
+   const handleAddUser = async (userTA) => {
+      if (selectedChat.users.find(u => u._id === userTA._id)) {
          toast({
             title: "User Already in group!",
             status: "error",
             duration: 5000,
             isClosable: true,
             position: "bottom",
-          });
-          return;
+         });
+         return;
       }
 
-      if(selectedChat.groupAdmin._id===user._id){
+      if (selectedChat.groupAdmin._id === user._id) {
          toast({
             title: "Only admins can add someone!",
             status: "error",
             duration: 5000,
             isClosable: true,
             position: "bottom",
-          });
-          return;
+         });
+         return;
       }
 
-      try{
+      try {
          setLoading(true);
-         const config={
-            headers:{
+         const config = {
+            headers: {
                Authorization: `Bearer ${user.token}`
             }
          }
-         const {data}=await axios.put('http://localhost:5000/api/v1/chat/groupadd',{
-            chatId:selectedChat._id,
-            userId:userTA._id,
-         },config);
+         const { data } = await axios.put('http://localhost:5000/api/v1/chat/groupadd', {
+            chatId: selectedChat._id,
+            userId: userTA._id,
+         }, config);
          setSelectedChat(data);
          setLoading(false);
          setFetchAgain(!fetchAgain);
-      }catch(err){
+      } catch (err) {
          toast({
             title: "Error Occured!",
             description: err.response.data.message,
@@ -109,8 +110,8 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain }) => {
             duration: 5000,
             isClosable: true,
             position: "bottom",
-          });
-          setLoading(false);
+         });
+         setLoading(false);
       }
    }
 

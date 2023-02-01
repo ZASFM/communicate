@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
 
    //sending messages:
    socket.on('new message', (newMessageReceived) => {
-      console.log(newMessageReceived);
+      //console.log(newMessageReceived);
       var chat = newMessageReceived.chat;
       if (!chat.users) return console.log('no users');
 

@@ -69,7 +69,7 @@ const Login = () => {
           localStorage.setItem('userinfo',JSON.stringify(data));
           navigate('/chats');
       }
-      catch(err){
+      catch(err){ 
          console.log(err);
          toast({
             title: 'Error occurred.',

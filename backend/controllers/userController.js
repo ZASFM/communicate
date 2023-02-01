@@ -45,7 +45,7 @@ const signup = asyncHandler(async (req, res, next) => {
       await user.save();
       res
          .status(200)
-         .json({ success: true, user: { ...user._doc, token: createToken(user._id) } });
+         .json({ success: true, user: { ...user._doc }, token: createToken(user._id) });
    }
    catch (err) {
       console.log(err);

@@ -9,7 +9,7 @@ import axios from "axios";
 import Chat from "./Chat";
 import io from 'socket.io-client';
 
-const ENDPOINT='http://localhost:5000';
+const ENDPOINT = 'http://localhost:5000';
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -17,12 +17,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [loading, setLoading] = useState(false);
    const [newMessage, setNewMessage] = useState('');
    const [socketConnected, setSocketConnected] = useState(false);
+   const [typing, setTyping] = useState(false);
+   const [isTyping, setIsTyping] = useState(false);
 
    const { user, selectedChat, setSelectedChat } = ChatState();
    const toast = useToast();
 
    const sendMessage = async (event) => {
       if (event.key === 'Enter' && newMessage) {
+         socket.emit('stop typing', selectedChat._id);
          try {
             const config = {
                headers: {
@@ -36,6 +39,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }, config);
 
             setNewMessage('');
+            socket.emit('new message', data);
             setMessages([...messages, data]);
          } catch (err) {
             toast({
@@ -61,9 +65,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }
          }
          const { data } = await axios.get(`http://localhost:5000/api/v1/message/${selectedChat._id}`, config);
-         console.log(data);
+         //console.log(data);
          setLoading(false);
          setMessages(data);
+         socket.emit('join chat', selectedChat._id);
       } catch (err) {
          toast({
             title: "Error Occured!",
@@ -79,17 +84,51 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
    const typingHandler = (e) => {
       setNewMessage(e.target.value);
+
+      if (!socketConnected) return;
+
+      if (!typing) {
+         setTyping(true);
+         socket.emit('typing', selectedChat._id);
+      }
+
+      let lastTimeTyping = new Date().getTime();
+      let timerLength = 3000;
+
+      setTimeout(() => {
+         var timeNow = new Date().getTime();
+         var diff = timeNow - lastTimeTyping;
+         if (diff >= timerLength && typing) {
+            socket.emit('stop typing', selectedChat._id);
+            setTyping(false);
+         }
+      }, timerLength)
    }
 
    useEffect(() => {
+      socket = io(ENDPOINT);
+      socket.emit('setup', user);
+      socket.on('connected', () => setSocketConnected(true));
+      socket.on('typing', () => setIsTyping(true));
+      socket.on('stop typing', () => setIsTyping(false));
+   }, [])
+
+   useEffect(() => {
       fetchMessages();
+      selectedChatCompare = selectedChat;
    }, [selectedChat])
 
-   useEffect(()=>{
-      socket=io(ENDPOINT);
-      socket.emit('setup',user);
-      socket.on('connection',()=>setSocketConnected(true));
-   },[])
+   useEffect(() => {
+      socket.on('message received', (newMessageReceived) => {
+         //throw a notification:
+         if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+
+         } else {
+            setMessages([...messages, newMessageReceived]);
+            console.log(messages);
+         }
+      })
+   })
 
    return (
       <>
@@ -159,6 +198,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         </div>
                      )}
                      <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+                        {isTyping ? <div>typing...</div> : <></>}
                         <Input
                            variant="filled"
                            bg="#E0E0E0"

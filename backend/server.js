@@ -26,9 +26,6 @@ app.use((err, req, res, next) => {
 const start = async () => {
    try {
       await connectDB(process.env.MONGO_URI);
-      app.listen(PORT, () => {
-         console.log(`App listening on port ${PORT}`);
-      })
    }
    catch (err) {
       console.log(err);
@@ -36,5 +33,25 @@ const start = async () => {
    }
 }
 
-
 start();
+const server=app.listen(PORT, () => {
+   console.log(`App listening on port ${PORT}`);
+})
+
+const io=require('socket.io')(server,{
+   pingTimeout:600000,
+   cors:{
+      origin:'http://localhost:3000'
+   }
+})
+
+io.on('connection',(socket)=>{
+   console.log('connected to socket.io');
+   
+   //creating the personal session for the user:
+   socket.on('setup',(userData)=>{
+      socket.join(userData._id);
+      console.log(userData.user._id);
+      socket.emit('connected')
+   })
+})

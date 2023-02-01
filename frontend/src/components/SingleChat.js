@@ -7,11 +7,16 @@ import UpdateGroupChat from "./user/UpdateGroupChat";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Chat from "./Chat";
+import io from 'socket.io-client';
+
+const ENDPOINT='http://localhost:5000';
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [messages, setMessages] = useState([]);
    const [loading, setLoading] = useState(false);
    const [newMessage, setNewMessage] = useState('');
+   const [socketConnected, setSocketConnected] = useState(false);
 
    const { user, selectedChat, setSelectedChat } = ChatState();
    const toast = useToast();
@@ -79,6 +84,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    useEffect(() => {
       fetchMessages();
    }, [selectedChat])
+
+   useEffect(()=>{
+      socket=io(ENDPOINT);
+      socket.emit('setup',user);
+      socket.on('connection',()=>setSocketConnected(true));
+   },[])
 
    return (
       <>

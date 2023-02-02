@@ -34,6 +34,7 @@ const start = async () => {
 }
 
 start();
+
 const server = app.listen(PORT, () => {
    console.log(`App listening on port ${PORT}`);
 })
@@ -73,7 +74,7 @@ io.on('connection', (socket) => {
       chat.users.forEach(user => {
          //dont show me my messages
          if (user._id == newMessageReceived.sender._id) return;
-         socket.in(user._id).emit('message received', newMessageReceived);
+         socket.emit('message received', newMessageReceived);
       })
    })
 })

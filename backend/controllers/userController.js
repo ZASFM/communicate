@@ -2,6 +2,7 @@ const User = require('../modles/userModal');
 const createError = require('../middlewares/createError');
 const asyncHandler = require('express-async-handler');
 const createToken = require('../middlewares/createToken');
+const transporter=require('../middlewares/nodeMail');
 
 const login = asyncHandler(async (req, res, next) => {
    const { email, password } = req.body;
@@ -43,6 +44,18 @@ const signup = asyncHandler(async (req, res, next) => {
          pic
       })
       await user.save();
+
+      try{
+         await transporter.sendMail({
+            from: '"Registration confirmation message" <shafi.bahrami.2015@gmail.com>', 
+            to: user.email, 
+            subject: "Registration successful✔", 
+            html: `<h1>Email confirmation</h1><div>Dear ${user.name}, we welcome you to our website</div>`, 
+         })
+      }catch(err){
+         console.log('Email verification unsuccessful');
+      }
+
       res
          .status(200)
          .json({ success: true, user: { ...user._doc }, token: createToken(user._id) });

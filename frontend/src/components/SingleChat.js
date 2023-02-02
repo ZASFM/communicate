@@ -111,7 +111,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.on('connected', () => setSocketConnected(true));
       socket.on('typing', () => setIsTyping(true));
       socket.on('stop typing', () => setIsTyping(false));
-   }, [])
+   }, [user])
 
    useEffect(() => {
       fetchMessages();
@@ -122,14 +122,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    useEffect(() => {
       socket.on('message received', (newMessageReceived) => {
          //throw a notification:
-         if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+/*          if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
             if (!notifications.include(newMessageReceived)) {
                setNotifications([newMessageReceived, ...notifications]);
             }
          } else {
             setMessages([...messages, newMessageReceived]);
             console.log(messages);
-         }
+         } */
+/*          setMessages([...messages, newMessageReceived]);
+         console.log(messages); */
+         fetchMessages();
       })
    })
 

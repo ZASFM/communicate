@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Chat from "./Chat";
 import io from 'socket.io-client';
+import { Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const ENDPOINT = 'http://localhost:5000';
 var socket, selectedChatCompare;
@@ -19,6 +21,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [socketConnected, setSocketConnected] = useState(false);
    const [typing, setTyping] = useState(false);
    const [isTyping, setIsTyping] = useState(false);
+   const navigate=useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
    const toast = useToast();
@@ -159,6 +162,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                      {!selectedChat.isGroupChat ?
                         (<>
                            {getSender(user, selectedChat.users)}
+                           <Button color='yellow.400' onClick={()=>navigate('/chats/call')}>Call</Button>
                            <ProfileModal
                               user={getSenderFull(user, selectedChat.users)}
                            />
@@ -166,6 +170,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         (
                            <>
                               {selectedChat.chatName.toUpperCase()}
+                              <Button color='yellow.400' onClick={()=>navigate('/chats/call')}>Call</Button>
                               {
                                  <UpdateGroupChat
                                     fetchAgain={fetchAgain}

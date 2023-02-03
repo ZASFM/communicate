@@ -1,4 +1,4 @@
-import { Box, SimpleGrid } from "@chakra-ui/react"
+import { Box, Grid, GridItem } from "@chakra-ui/react"
 import { AgoraVideoPlayer } from 'agora-rtc-react';
 import { useState, useEffect } from "react";
 
@@ -10,28 +10,28 @@ const Video = ({ tracks, users }) => {
    }, [users, tracks]);
 
    return (
-      <SimpleGrid style={{ height: "100%" }} spacing="40px" columns={[gridSpacing, null, 2]}>
-         <Box>
+      <Grid style={{ height: "100%" }} gap={4} templateRows={1} templateColumns={2}>
+         <GridItem>
             <AgoraVideoPlayer
                videoTrack={tracks[1]}
                style={{ height: "100%", width: "100%" }}
             />
-         </Box>
+         </GridItem>
          {users.length > 0 &&
             users.map((user) => {
                if (user.videoTrack) {
                   return (
-                     <Box>
+                     <GridItem>
                         <AgoraVideoPlayer
                            videoTrack={user.videoTrack}
                            key={user.uid}
                            style={{ height: "100%", width: "100%" }}
                         />
-                     </Box>
+                     </GridItem>
                   );
                } else return null;
             })}
-      </SimpleGrid>
+      </Grid>
    )
 }
 

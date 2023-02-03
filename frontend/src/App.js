@@ -19,7 +19,7 @@ const App = () => {
             element={<ChatPage />}
           />
           <Route
-            path="call:/id"
+            path="/chats/call"
             element={<Calls />}
           />
         </Route>

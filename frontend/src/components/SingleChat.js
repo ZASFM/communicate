@@ -41,9 +41,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                chatId: selectedChat._id
             }, config);
 
-            setNewMessage('');
             socket.emit('new message', data);
             setMessages([...messages, data]);
+            setNewMessage('');
          } catch (err) {
             toast({
                title: "Error Occured!",
@@ -114,7 +114,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.on('connected', () => setSocketConnected(true));
       socket.on('typing', () => setIsTyping(true));
       socket.on('stop typing', () => setIsTyping(false));
-   }, [user])
+   }, [])
 
    useEffect(() => {
       fetchMessages();
@@ -125,17 +125,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    useEffect(() => {
       socket.on('message received', (newMessageReceived) => {
          //throw a notification:
-/*          if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
-            if (!notifications.include(newMessageReceived)) {
+          if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+            if (!notifications.includes(newMessageReceived)) {
                setNotifications([newMessageReceived, ...notifications]);
+               setFetchAgain(!fetchAgain);
             }
          } else {
             setMessages([...messages, newMessageReceived]);
             console.log(messages);
-         } */
-/*          setMessages([...messages, newMessageReceived]);
-         console.log(messages); */
-         fetchMessages();
+         } 
       })
    })
 

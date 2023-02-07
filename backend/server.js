@@ -94,14 +94,14 @@ io.on("connection", (socket) => {
    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
  
    socket.on("new message", (newMessageReceived) => {
-     var chat = newMessageReceived.chat;
+     var chat = newMessageReceived.data.chat;
  
-     if (!chat.users) return console.log("chat.users not defined");
+     if (!chat.users) return;
  
      chat.users.forEach((user) => {
-       if (user._id === newMessageReceived.sender._id) return;
+       if (user._id === newMessageReceived.data.sender._id) return;
  
-       socket.in(user._id).emit("message received", newMessageReceived);
+       socket.in(newMessageReceived.room).emit("message received", newMessageReceived.data);
      });
    });
  

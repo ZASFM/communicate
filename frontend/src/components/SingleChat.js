@@ -41,7 +41,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                chatId: selectedChat._id
             }, config);
 
-            socket.emit('new message', data);
+            socket.emit('new message', {data,room:selectedChat._id});
             setMessages([...messages, data]);
             setNewMessage('');
          } catch (err) {
@@ -114,7 +114,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.on('connected', () => setSocketConnected(true));
       socket.on('typing', () => setIsTyping(true));
       socket.on('stop typing', () => setIsTyping(false));
-   }, [])
+   }, [user])
 
    useEffect(() => {
       fetchMessages();

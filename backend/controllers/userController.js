@@ -3,6 +3,7 @@ const createError = require('../middlewares/createError');
 const asyncHandler = require('express-async-handler');
 const createToken = require('../middlewares/createToken');
 const transporter=require('../middlewares/nodeMail');
+const Chat=require('../modles/chatModal');
 
 const login = asyncHandler(async (req, res, next) => {
    const { email, password } = req.body;
@@ -77,8 +78,51 @@ const allUsers = asyncHandler(async (req, res, next) => {
    res.status(200).send(users);
 })
 
+const addNotification=asyncHandler(async(req,res,next)=>{
+   const {userId,messageId}=req.body;
+   try{
+      let notification=await User.findByIdAndUpdate(userId,
+         {$push:{notifications:messageId}},
+         {new:true}
+      )
+      .populate('notifications')
+
+      notification=await User.populate(notification,{
+         path:'notifications.sender',
+         select:'name email'
+      });
+
+      notification=await Chat.populate(notification,{
+         path:'notifications.chat',
+         select:'chatName users'
+      });
+
+      notification=await User.populate(notification,{
+         path:'notifications.chat.users',
+         select:'name email'
+      });
+
+      res.status(200).json(notification);
+   }catch(err){
+      console.log(err);
+      next(createError(400,'Could not add notification'))
+   }
+})
+
+const removeNotification=asyncHandler(async(req,res,next)=>{
+   const {userId,messageId}=req.body;
+   try{
+      await User.findByIdAndUpdate(userId,{$pull:{notifications:messageId}});
+      res.status(200).json({success:true})
+   }catch(err){
+      next(createError(400,'Could not delete notification'))
+   }
+})
+
 module.exports = {
    login,
    signup,
-   allUsers
+   allUsers,
+   addNotification,
+   removeNotification
 }

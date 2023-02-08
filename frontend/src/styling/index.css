@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
-
-.App{
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
+.App {
   min-height: 100vh;
   display: flex;
-  background-image: url('./background.png');
+  background-image: url("../background.png");
   background-size: cover;
   background-position: center;
 }
@@ -21,9 +20,9 @@
   background: #555;
 }
 
-.messages{
+.messages {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
   scrollbar-width: none;
-}
+}/*# sourceMappingURL=index.css.map */

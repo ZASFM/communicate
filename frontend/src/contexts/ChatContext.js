@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { json, Navigate } from 'react-router-dom';
 
 const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
@@ -16,6 +16,7 @@ const ChatProvider = ({ children }) => {
          <Navigate to="/" />
       }
    }, [])
+
    return (
       <ChatContext.Provider
          value={{

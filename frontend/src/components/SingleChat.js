@@ -121,7 +121,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       selectedChatCompare = selectedChat;
    }, [selectedChat])
 
-   //Conflicting part, check it evetually 
    useEffect(() => {
       socket.on('message received', (newMessageReceived) => {
          //throw a notification:
@@ -134,8 +133,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             setMessages([...messages, newMessageReceived]);
             console.log(messages);
          } 
-      })
-   })
+      }) 
+   }) 
 
    return (
       <>

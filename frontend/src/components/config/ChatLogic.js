@@ -1,10 +1,10 @@
 //returning the name if the user that is not logged in
 export const getSender = (loggedUser, users) => {
-   return users[0]._id === loggedUser.id ? users[0].name : users[1].name
+   return users[0]._id === loggedUser._id ? users[1].name : users[0].name
 }
 
 export const getSenderFull = (loggedUser, users) => {
-   return users[0]._id === loggedUser._id ? users[0] : users[1]
+   return users[0]._id === loggedUser._id ? users[1] : users[0]
 }
 
 export const isSameSender = (messages, m, i, userId) => {

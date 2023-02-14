@@ -182,10 +182,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                      />
                      {!selectedChat.isGroupChat ?
                         (<>
-                           {getSender(user, selectedChat.users)}
+                           {getSender(user.user, selectedChat.users)}
                            <Button color='yellow.400' onClick={()=>navigate('/chats/call')}>Call</Button>
                            <ProfileModal
-                              user={getSenderFull(user, selectedChat.users)}
+                              user={getSenderFull(user.user, selectedChat.users)}
                            />
                         </>) :
                         (

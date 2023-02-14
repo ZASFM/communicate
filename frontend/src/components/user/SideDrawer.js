@@ -17,7 +17,7 @@ import {
    useToast,
    Spinner
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Avatar } from "@chakra-ui/react";
 import { ChatState } from "../../contexts/ChatContext";
@@ -36,8 +36,10 @@ const SideDrawer = () => {
    const [searchResults, setSearchResults] = useState([]);
    const [loading, setLoading] = useState(false);
    const [loadingChat, setLoadingChat] = useState(false);
+   const [notifications1, setNotifications1]=useState([]);
    const navigate = useNavigate();
    const toast = useToast();
+   console.log(notifications1);
 
    const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState();
    const { isOpen, onOpen, onClose } = useDisclosure();
@@ -116,6 +118,19 @@ const SideDrawer = () => {
       }
    }
 
+   useEffect(()=>{
+      const fetchNotifications=async()=>{
+         const myId=JSON.parse(localStorage.getItem('userinfo')).user._id;
+         try{ 
+            const {data}=await axios.get(`http://localhost:5000/api/v1/user/notifications/${myId}`);
+            setNotifications1(data.notifications);
+         }catch(err){
+            console.log(err);
+         }
+      }
+      fetchNotifications();
+   },[])
+
    return (
       <>
          <Box
@@ -153,13 +168,13 @@ const SideDrawer = () => {
                      <BellIcon fontSize="2xl" m={1} />
                   </MenuButton>
                   <MenuList>
-                     {!notifications.length && 'No new messages'}
-                     {notifications.map(n => (
+                     {!notifications1.length && 'No new messages'}
+                     {notifications1!==[] && notifications1.map(n => (
                         <MenuItem
                            key={n._id}
                            onClick={() => {
                               setSelectedChat(n.chat);
-                              setNotifications(notifications.filter(no => no !== n))
+                              setNotifications1(notifications1.filter(no => no !== n))
                            }}
                         >
                            {n.chat.isGroupChat ?

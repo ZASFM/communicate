@@ -21,9 +21,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [socketConnected, setSocketConnected] = useState(false);
    const [typing, setTyping] = useState(false);
    const [isTyping, setIsTyping] = useState(false);
+   const [chatList,setChatList]=useState([]);
    const navigate=useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
+   //console.log(selectedChat);
    const toast = useToast();
 
    const sendMessage = async (event) => {
@@ -109,9 +111,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }, timerLength)
    }
 
+   const addNotification=async(message)=>{
+      const filterId=selectedChat.users.filter(user=>user._id!==user.user._id);
+/*       console.log('------');
+      console.log(filterId);
+      console.log(selectedChat); */
+      try{
+/*          await axios.post('http://localhost:5000/api/v1/user/notifications',{
+            userId:filterId[0]._id,
+            messageId:message._id,
+         }) */
+      }catch(err){
+         console.log(err);
+      }
+   }
+
    useEffect(() => {
       socket = io(ENDPOINT);
-      socket.emit('setup', user);
+      socket.emit('setup');
       socket.on('connected', () => setSocketConnected(true));
       socket.on('typing', () => setIsTyping(true));
       socket.on('stop typing', () => setIsTyping(false));
@@ -120,14 +137,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    useEffect(() => {
       fetchMessages();
       selectedChatCompare = selectedChat;
+/*       if(selectedChat){
+         setChatList([...chatList,selectedChat])
+      }
+      socket.emit('leave chat',); */
    }, [selectedChat])
 
    useEffect(() => {
       socket.on('message received', (newMessageReceived) => {
          console.log(newMessageReceived);
-         //throw a notification:
+         //throw a notification, when im not in the selected chat that:
           if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
             if (!notifications.includes(newMessageReceived)) {
+               addNotification(newMessageReceived)
                setNotifications([newMessageReceived, ...notifications]);
                setFetchAgain(!fetchAgain);
             }

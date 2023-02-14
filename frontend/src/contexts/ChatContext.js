@@ -7,6 +7,7 @@ const ChatProvider = ({ children }) => {
    const [selectedChat, setSelectedChat] = useState();
    const [chats, setChats] = useState([]);
    const [notifications, setNotifications] = useState([]);
+   const [filterChat,setFilterChat]=useState([]);
 
    useEffect(() => {
       const userInfo = JSON.parse(localStorage.getItem('userinfo'));
@@ -16,6 +17,10 @@ const ChatProvider = ({ children }) => {
          <Navigate to="/" />
       }
    }, [])
+
+/*    useEffect(()=>{
+      const filterId=selectedChat.users.filter(User=>User._id!==user.user._id);;
+   },[selectedChat]) */
 
    return (
       <ChatContext.Provider

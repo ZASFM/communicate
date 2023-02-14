@@ -119,10 +119,26 @@ const removeNotification=asyncHandler(async(req,res,next)=>{
    }
 })
 
+const getNotifications=asyncHandler(async(req,res,next)=>{
+   try{
+      let notifications=await User.findById(req.params.id)
+         .populate('notifications')
+         
+      notifications=await User.populate(notifications,{
+         path:'notifications.sender',
+         select:'name email'
+      })
+      res.status(200).json(notifications);
+   }catch(err){
+      next(createError(400,'Could not fetch notifications'))
+   }
+})
+
 module.exports = {
    login,
    signup,
    allUsers,
    addNotification,
-   removeNotification
+   removeNotification,
+   getNotifications
 }

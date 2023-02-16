@@ -39,7 +39,7 @@ const SideDrawer = () => {
    const [notifications1, setNotifications1]=useState([]);
    const navigate = useNavigate();
    const toast = useToast();
-   console.log(notifications1);
+   //console.log(notifications1);
 
    const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState();
    const { isOpen, onOpen, onClose } = useDisclosure();

@@ -73,7 +73,7 @@ const VideoCall = ({ setInCall }) => {
             )}
          </GridItem>
          <GridItem h="95%">
-            {start && tracks && <Video tracks={tracks} users={users} />}
+            {start && <Video tracks={tracks} users={users} />}
          </GridItem>
       </Grid>
    )

@@ -21,7 +21,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [socketConnected, setSocketConnected] = useState(false);
    const [typing, setTyping] = useState(false);
    const [isTyping, setIsTyping] = useState(false);
-   const [chatList,setChatList]=useState([]);
+   const [deliverNot,setDeliverNot]=useState(false);
    const navigate=useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
@@ -101,6 +101,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       let lastTimeTyping = new Date().getTime();
       let timerLength = 3000;
 
+      //If the user stays more than 3 seconds without a typing, "typing..." should disappear
       setTimeout(() => {
          var timeNow = new Date().getTime();
          var diff = timeNow - lastTimeTyping;
@@ -112,10 +113,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    }
 
    const addNotification=async(message)=>{
-      const filterId=selectedChat.users.filter(user=>user._id!==user.user._id);
+      const filterId=selectedChat.users.filter(User=>User._id!==user.user._id);
 /*       console.log('------');
-      console.log(filterId);
-      console.log(selectedChat); */
+      console.log( filterId[0]._id);
+      console.log(message._id); */
       try{
 /*          await axios.post('http://localhost:5000/api/v1/user/notifications',{
             userId:filterId[0]._id,
@@ -125,6 +126,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          console.log(err);
       }
    }
+
+   useEffect(()=>{
+      
+   },[])
 
    useEffect(() => {
       socket = io(ENDPOINT);
@@ -145,17 +150,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
    useEffect(() => {
       socket.on('message received', (newMessageReceived) => {
-         console.log(newMessageReceived);
+         //console.log(newMessageReceived);
          //throw a notification, when im not in the selected chat that:
           if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
             if (!notifications.includes(newMessageReceived)) {
-               addNotification(newMessageReceived)
+               addNotification(newMessageReceived);
                setNotifications([newMessageReceived, ...notifications]);
                setFetchAgain(!fetchAgain);
             }
+         //If im inside the chat, show it immediately
          } else {
             setMessages([...messages, newMessageReceived]);
-            console.log(messages);
+            //console.log(messages);
          } 
       }) 
    }) 

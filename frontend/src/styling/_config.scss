@@ -1,4 +1,19 @@
+//Root:
+$primary-color:#000;
+
 @mixin flex($direction){
    display: flex;
    flex-direction: $direction;
+}
+
+@mixin transition-ease {
+   transition: all 0.5s ease-in-out;
+}
+
+@function set-text-color($color) {
+   @if (lightness($color) > 40%) {
+     @return #000;
+   } @else {
+     @return #fff;
+   }
 }

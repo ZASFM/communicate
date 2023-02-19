@@ -11,6 +11,9 @@ import io from 'socket.io-client';
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { BsMicFill } from 'react-icons/bs';
+import useRecorder from '../components/mediaMessage/audioMessage/hooks/useRecorder'
+import RecorderControls from "./mediaMessage/audioMessage/components/recorder-controls";
+import RecordingsList from "./mediaMessage/audioMessage/components/recordings-list";
 
 const ENDPOINT = 'http://localhost:5000';
 var socket, selectedChatCompare;
@@ -24,6 +27,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [isTyping, setIsTyping] = useState(false);
    const [deliverNot, setDeliverNot] = useState(false);
    const [isListening, setIsListening] = useState(false);
+   const { recorderState, ...handlers } = useRecorder();
+   const { audio } = recorderState;
    const navigate = useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
@@ -178,18 +183,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          }
       } else {
          mic.stop();
-         mic.onend=()=>{
+         mic.onend = () => {
             console.log('Mic stopped');
          }
       }
-      
-      mic.onresult=(e)=>{
-         const transcript=Array.from(e.results)
-            .map(results=>results[0])
-            .map(result=>result.transcript)
+
+      mic.onresult = (e) => {
+         const transcript = Array.from(e.results)
+            .map(results => results[0])
+            .map(result => result.transcript)
             .join('');
          setNewMessage(transcript);
-         mic.onerror=(e)=>console.log(e.error);
+         mic.onerror = (e) => console.log(e.error);
       }
    }
 
@@ -287,10 +292,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                               onClick={() => setIsListening(preVal => !preVal)}
                               cursor="pointer"
                            >
-                              {isListening?'Listening...':<BsMicFill/>}
+                              {isListening ? 'Listening...' : <BsMicFill />}
                            </Box>
                         </div>
                      </FormControl>
+{/*                      <RecorderControls recorderState={recorderState} handlers={handlers} />
+                     <RecordingsList audio={audio} /> */}
                   </Box>
                </>
             ) : (

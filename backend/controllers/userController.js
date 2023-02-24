@@ -127,9 +127,21 @@ const getNotifications=asyncHandler(async(req,res,next)=>{
       notifications=await User.populate(notifications,{
          path:'notifications.sender',
          select:'name email'
-      })
+      });
+
+      notifications=await Chat.populate(notifications,{
+         path:"notifications.chat",
+      });
+
+      notifications=await User.populate(notifications,{
+         path:"notifications.chat.users",
+         select:'-password'
+      }); 
+
+      await notifications.populate('notifications.chat.latestMessage');
       res.status(200).json(notifications);
    }catch(err){
+      console.log(err);
       next(createError(400,'Could not fetch notifications'))
    }
 })

@@ -75,7 +75,7 @@ io.on("connection", (socket) => {
          if (user._id === newMessageReceived.data.sender._id) return;
 
          //Send the message back to add it to the messages array:
-         socket.in(newMessageReceived.room).emit("message received", newMessageReceived.data);
+         socket.in(newMessageReceived.room).emit("message received", {newMessageReceived:newMessageReceived.data,chat});
       });
    });
 });

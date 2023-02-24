@@ -7,12 +7,12 @@ import { useEffect } from 'react';
 const Chat = ({ messages }) => {
    const { user } = ChatState();
 
-   useEffect(()=>{
+/*    useEffect(()=>{
       const audio=new Audio();
       audio.src="blob:http://localhost:3000/6e8aa83c-005f-4e3c-8215-5ba9875790fb"
       audio.controls=true;
       document.getElementById('only-audio').append(audio);
-   },[])
+   },[]) */
 
    return (
       <ScrollableFeed>
@@ -54,7 +54,9 @@ const Chat = ({ messages }) => {
                   {
                      !m.isMedia?
                      (<span>{m.content}</span>):
-                     (<audio controls src="blob:http://localhost:3000/6e8aa83c-005f-4e3c-8215-5ba9875790fb"/>)
+                     (
+                        <audio controls src={m.content} type="audio/wav"/>
+                     )
 
                   }
                </span>

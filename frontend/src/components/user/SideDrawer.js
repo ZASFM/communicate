@@ -39,7 +39,7 @@ const SideDrawer = () => {
    const [notifications1, setNotifications1]=useState([]);
    const navigate = useNavigate();
    const toast = useToast();
-   //console.log(notifications1);
+   console.log(notifications1);
 
    const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState();
    const { isOpen, onOpen, onClose } = useDisclosure();
@@ -177,9 +177,8 @@ const SideDrawer = () => {
                               setNotifications1(notifications1.filter(no => no !== n))
                            }}
                         >
-                           {n.chat.isGroupChat ?
-                              `New message in: ${n.chat.chatName}` :
-                              `New message from ${getSender(user, n.chat.users)}`
+                           {
+                              `New message from ${n.sender.name}`
                            }
                         </MenuItem>
                      ))}

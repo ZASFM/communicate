@@ -1,13 +1,13 @@
 import { ChatState } from "../contexts/ChatContext";
-import { 
-   Box, 
-   FormControl, 
-   IconButton, 
-   Input, 
-   Spinner, 
-   Text, 
+import {
+   Box,
+   FormControl,
+   IconButton,
+   Input,
+   Spinner,
+   Text,
    useToast,
-   Select 
+   Select
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "./config/ChatLogic";
@@ -37,8 +37,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [isTyping, setIsTyping] = useState(false);
    const [deliverNot, setDeliverNot] = useState(false);
    const [isListening, setIsListening] = useState(false);
-/*    const { recorderState, ...handlers } = useRecorder();
-   const { audio } = recorderState; */
+   /*    const { recorderState, ...handlers } = useRecorder();
+      const { audio } = recorderState; */
    const navigate = useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
@@ -135,16 +135,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }, timerLength)
    }
 
-   const addNotification = async (message) => {
-      const filterId = selectedChat.users.filter(User => User._id !== user.user._id);
-      /*       console.log('------');
+   const addNotification = async (message,chat) => {
+      const filterId = chat.users.filter(User => User._id === user.user._id);
+/*             console.log('------');
             console.log( filterId[0]._id);
             console.log(message._id); */
       try {
-         /*          await axios.post('http://localhost:5000/api/v1/user/notifications',{
-                     userId:filterId[0]._id,
-                     messageId:message._id,
-                  }) */
+         await axios.post('http://localhost:5000/api/v1/user/notifications', {
+            userId: filterId[0]._id,
+            messageId: message._id,
+         })
       } catch (err) {
          console.log(err);
       }
@@ -171,18 +171,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.on('message received', (newMessageReceived) => {
          //console.log(newMessageReceived);
          //throw a notification, when im not in the selected chat that:
-         if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
-            if (!notifications.includes(newMessageReceived)) {
-               addNotification(newMessageReceived);
-               setNotifications([newMessageReceived, ...notifications]);
+         if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.newMessageReceived.chat._id) {
+            if (!notifications.includes(newMessageReceived.newMessageReceived)) {
+               addNotification(newMessageReceived.newMessageReceived,newMessageReceived.chat);
+               setNotifications([newMessageReceived.newMessageReceived, ...notifications]);
                setFetchAgain(!fetchAgain);
             }
             //If im inside the chat, show it immediately
          } else {
-            setMessages([...messages, newMessageReceived]);
+            setMessages([...messages, newMessageReceived.newMessageReceived]);
             //console.log(messages);
          }
-      })
+      });
+      if(socket.connected) return ()=>socket.removeAllListeners('message received');
    })
 
    const handleListen = () => {
@@ -308,13 +309,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                      </FormControl>
                      <SendAudioModal>
                         <Button
-                           rightIcon={<BsMicFill/>}
+                           rightIcon={<BsMicFill />}
                            padding="5px"
                         >
-                           Send 
+                           Send
                         </Button>
                      </SendAudioModal>
-{/*                      <RecorderControls recorderState={recorderState} handlers={handlers} />
+                     {/*                      <RecorderControls recorderState={recorderState} handlers={handlers} />
                      <RecordingsList audio={audio} /> */}
                   </Box>
                </>

@@ -2,9 +2,17 @@ import { Avatar, Tooltip } from '@chakra-ui/react';
 import ScrollableFeed from 'react-scrollable-feed';
 import { ChatState } from '../contexts/ChatContext';
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from './config/ChatLogic';
+import { useEffect } from 'react';
 
 const Chat = ({ messages }) => {
    const { user } = ChatState();
+
+   useEffect(()=>{
+      const audio=new Audio();
+      audio.src="blob:http://localhost:3000/6e8aa83c-005f-4e3c-8215-5ba9875790fb"
+      audio.controls=true;
+      document.getElementById('only-audio').append(audio);
+   },[])
 
    return (
       <ScrollableFeed>
@@ -43,10 +51,18 @@ const Chat = ({ messages }) => {
                      marginTop: isSameUser(messages, m, i, user.user._id) ? 3 : 10
                   }}
                >
-                  {m.content}
+                  {
+                     !m.isMedia?
+                     (<span>{m.content}</span>):
+                     (<audio controls src="blob:http://localhost:3000/6e8aa83c-005f-4e3c-8215-5ba9875790fb"/>)
+
+                  }
                </span>
             </div>
          ))}
+         <div id='only-audio'>
+
+         </div>
       </ScrollableFeed>
    )
 }

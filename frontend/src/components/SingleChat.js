@@ -1,5 +1,14 @@
 import { ChatState } from "../contexts/ChatContext";
-import { Box, FormControl, IconButton, Input, Spinner, Text, useToast } from '@chakra-ui/react';
+import { 
+   Box, 
+   FormControl, 
+   IconButton, 
+   Input, 
+   Spinner, 
+   Text, 
+   useToast,
+   Select 
+} from '@chakra-ui/react';
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "./config/ChatLogic";
 import ProfileModal from "./user/profileModal";
@@ -11,9 +20,10 @@ import io from 'socket.io-client';
 import { Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { BsMicFill } from 'react-icons/bs';
-import useRecorder from '../components/mediaMessage/audioMessage/hooks/useRecorder'
+/* import useRecorder from '../components/mediaMessage/audioMessage/hooks/useRecorder' */
 import RecorderControls from "./mediaMessage/audioMessage/components/recorder-controls";
 import RecordingsList from "./mediaMessage/audioMessage/components/recordings-list";
+import SendAudioModal from "./user/SendAudioModal";
 
 const ENDPOINT = 'http://localhost:5000';
 var socket, selectedChatCompare;
@@ -27,8 +37,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [isTyping, setIsTyping] = useState(false);
    const [deliverNot, setDeliverNot] = useState(false);
    const [isListening, setIsListening] = useState(false);
-   const { recorderState, ...handlers } = useRecorder();
-   const { audio } = recorderState;
+/*    const { recorderState, ...handlers } = useRecorder();
+   const { audio } = recorderState; */
    const navigate = useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
@@ -296,6 +306,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                            </Box>
                         </div>
                      </FormControl>
+                     <SendAudioModal>
+                        <Button
+                           rightIcon={<BsMicFill/>}
+                           padding="5px"
+                        >
+                           Send 
+                        </Button>
+                     </SendAudioModal>
 {/*                      <RecorderControls recorderState={recorderState} handlers={handlers} />
                      <RecordingsList audio={audio} /> */}
                   </Box>

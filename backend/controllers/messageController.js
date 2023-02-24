@@ -5,7 +5,7 @@ const User = require('../modles/userModal');
 const Chat = require('../modles/chatModal');
 
 const sendMessage = asyncHandler(async (req, res, next) => {
-   const {chatId,content}=req.body;
+   const {chatId,content,isMedia}=req.body;
    try {
      if(!chatId||!content){
       next(createError(401,'Missing parameters'));
@@ -14,7 +14,8 @@ const sendMessage = asyncHandler(async (req, res, next) => {
      var newMessage={
       sender:req.user._id,
       content:content,
-      chat:chatId
+      chat:chatId,
+      isMedia
      }
 
       var message=new Message(newMessage);

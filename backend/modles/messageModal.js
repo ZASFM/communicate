@@ -12,6 +12,10 @@ const messageModal = mongoose.Schema({
    chat: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat"
+   },
+   isMedia:{
+      type:Boolean,
+      default:false
    }
 }, {
    timestamps: true

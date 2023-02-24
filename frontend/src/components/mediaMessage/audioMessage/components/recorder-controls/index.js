@@ -1,4 +1,5 @@
 import {formatMinutes,formatSeconds} from '../../utils/format-time';
+import {FaTimesCircle} from 'react-icons/fa'
 
 const RecorderControls = ({ recorderState, handlers }) => {
    const { recordingMinutes, recordingSeconds, initRecording } = recorderState;
@@ -16,7 +17,7 @@ const RecorderControls = ({ recorderState, handlers }) => {
                {initRecording && (
                   <div className="cancel-button-container">
                      <button className="cancel-button" title="Cancel recording" onClick={cancelRecording}>
-                        times
+                        <FaTimesCircle/>
                      </button>
                   </div>
                )}
@@ -29,11 +30,11 @@ const RecorderControls = ({ recorderState, handlers }) => {
                      disabled={recordingSeconds === 0}
                      onClick={saveRecording}
                   >
-                     save
+                     Save
                   </button>
                ) : (
                   <button className="start-button" title="Start recording" onClick={startRecording}>
-                     mic
+                     Start
                   </button>
                )}
             </div>

@@ -74,7 +74,7 @@ const useRecorder=()=>{
          }
 
          recorder.onstop=()=>{
-            const blob= new Blob(chunks,{type: "audio/wav; codecs=1"});
+            const blob= new Blob(chunks,{type: "audio/webm; codecs=opus"});
             chunks=[];
             setRecorderState(preState=>{
                if(preState.mediaRecorder){

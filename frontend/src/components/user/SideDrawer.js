@@ -31,7 +31,7 @@ import { getSender } from "../config/ChatLogic";
 import { Effect } from 'react-notification-badge';
 import NotificationBadge from "react-notification-badge";
 
-const SideDrawer = () => {
+const SideDrawer = ({fetchAgain,setFetchAgain}) => {
    const [search, setSearch] = useState('');
    const [searchResults, setSearchResults] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -39,9 +39,8 @@ const SideDrawer = () => {
    const [notifications1, setNotifications1]=useState([]);
    const navigate = useNavigate();
    const toast = useToast();
-   console.log(notifications1);
 
-   const { user, setSelectedChat, chats, setChats, notifications, setNotifications } = ChatState();
+   const { user, setSelectedChat, chats, setChats } = ChatState();
    const { isOpen, onOpen, onClose } = useDisclosure();
 
    const logOutHandler = () => {
@@ -129,7 +128,25 @@ const SideDrawer = () => {
          }
       }
       fetchNotifications();
-   },[])
+   },[fetchAgain])
+   
+   const removeNotifications=async(notificationId)=>{
+      try{
+         const config={
+            headers:{
+               Authorization:`Bearer ${user.token}`,
+               'Content-Type':'application/json'
+            }
+         };
+         const {data}=await axios.put('http://localhost:5000/api/v1/user/notifications',{
+            userId:user.user._id,
+            messageId:notificationId
+         },config);
+         if(data.status===200) setFetchAgain(fetching=>!fetching);
+      }catch(err){
+         console.log(err);
+      }
+   }
 
    return (
       <>
@@ -162,7 +179,7 @@ const SideDrawer = () => {
                <Menu>
                   <MenuButton p={1}>
                      <NotificationBadge
-                        count={notifications.length}
+                        count={notifications1.length}
                         effect={Effect.SCALE}
                      />
                      <BellIcon fontSize="2xl" m={1} />
@@ -174,7 +191,8 @@ const SideDrawer = () => {
                            key={n._id}
                            onClick={() => {
                               setSelectedChat(n.chat);
-                              setNotifications1(notifications1.filter(no => no !== n))
+                              removeNotifications(n._id);
+                              setNotifications1(notifications1.filter(no => no !== n));
                            }}
                         >
                            {

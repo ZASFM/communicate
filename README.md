@@ -82,20 +82,20 @@ npm start
 ## How to use the project
 Here you can have a real look of the project, if anything goes wrong, just reload the page.
    * Authentication and Authorization:
-   ![](/screenshots/signup.png?raw=true)
-   ![](/screenshots/login.png?raw=true)
+   ![Alt text](/screenshots/signup.png?raw=true)
+   ![](./screenshots/login.png?raw=true)
 
    * Dashboard 
-   ![](/screenshots/dashboard.png?raw=true)
+   ![Alt text](./screenshots/dashboard.png?raw=true)
 
    * Searching for users to chat
-   ![](/screenshots/search.png?raw=true)
+   ![Alt text](/screenshots/search.png)
 
    * Two people chat
-   ![](/screenshots/single%20chat.png?raw=true)
+   ![](./screenshots/single%20chat.png)
 
    * Create group chat:
-   ![](/screenshots/createGroup.png?raw=true) 
+   ![Alt text](./screenshots/createGroup.png?raw=true) 
 
    * Add members to the group, or change group name after creation
    ![](/screenshots/addMembers.png?raw=true)

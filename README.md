@@ -82,37 +82,37 @@ npm start
 ## How to use the project
 Here you can have a real look of the project, if anything goes wrong, just reload the page.
    * Authentication and Authorization:
-   ![Alt text](/screenshots/signup.png?raw=true)
-   ![Alt text](/screenshots/login.png?raw=true)
+   ![](/screenshots/signup.png?raw=true)
+   ![](/screenshots/login.png?raw=true)
 
    * Dashboard 
-   ![Alt text](/screenshots/dashboard.png?raw=true)
+   ![](/screenshots/dashboard.png?raw=true)
 
    * Searching for users to chat
-   ![Alt text](/screenshots/search.png?raw=true)
+   ![](/screenshots/search.png?raw=true)
 
    * Two people chat
-   ![Alt text](/screenshots/single%20chat.png?raw=true)
+   ![](/screenshots/single%20chat.png?raw=true)
 
    * Create group chat:
-   ![Alt text](/screenshots/createGroup.png?raw=true) 
+   ![](/screenshots/createGroup.png?raw=true) 
 
    * Add members to the group, or change group name after creation
-   ![Alt text](/screenshots/addMembers.png?raw=true)
+   ![](/screenshots/addMembers.png?raw=true)
 
    * Update group
-   ![Alt text](/screenshots/update%20group.png?raw=true)
+   ![](/screenshots/update%20group.png?raw=true)
 
    * Profiles
-   ![Alt text](/screenshots/statuses.png?raw=true)
+   ![](/screenshots/statuses.png?raw=true)
 
    * "Typing..." on typing
-   ![Alt text](/screenshots/typing.png?raw=true)
+   ![](/screenshots/typing.png?raw=true)
 
    * Notifications
-   ![Alt text](/screenshots/notification.png?raw=true)   
+   ![](/screenshots/notification.png?raw=true)   
 
    * Audio messages:
-   ![Alt text](/screenshots/audioMessage.png?raw=true)     
+   ![](/screenshots/audioMessage.png?raw=true)     
 ## Contacts
 My email: shafi.bahrami.2015@gmail.com

@@ -98,16 +98,16 @@ Here you can have a real look of the project, if anything goes wrong, just reloa
    ![Alt text](./screenshots/createGroup.png?raw=true) 
 
    * Add members to the group, or change group name after creation
-   ![](/screenshots/addMembers.png?raw=true)
+   ![Alt text](/screenshots/addMembers.png?raw=true)
 
    * Update group
-   ![](/screenshots/update%20group.png?raw=true)
+   ![Alt text](/screenshots/update%20group.png?raw=true)
 
    * Profiles
-   ![](/screenshots/statuses.png?raw=true)
+   ![Alt text](/screenshots/statuses.png?raw=true)
 
    * "Typing..." on typing
-   ![](/screenshots/typing.png?raw=true)
+   ![Alt text](/screenshots/typing.png?raw=true)
 
    * Notifications
    ![](/screenshots/notification.png?raw=true)   

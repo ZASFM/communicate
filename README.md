@@ -83,7 +83,7 @@ npm start
 Here you can have a real look of the project, if anything goes wrong, just reload the page.
    * Authentication and Authorization:
    ![Alt text](/screenshots/signup.png?raw=true)
-   ![](./screenshots/login.png?raw=true)
+   ![Alt text](./screenshots/login.png?raw=true)
 
    * Dashboard 
    ![Alt text](./screenshots/dashboard.png?raw=true)
@@ -92,7 +92,7 @@ Here you can have a real look of the project, if anything goes wrong, just reloa
    ![Alt text](/screenshots/search.png)
 
    * Two people chat
-   ![](./screenshots/single%20chat.png)
+   ![Alt text](./screenshots/single%20chat.png)
 
    * Create group chat:
    ![Alt text](./screenshots/createGroup.png?raw=true) 
@@ -110,9 +110,9 @@ Here you can have a real look of the project, if anything goes wrong, just reloa
    ![Alt text](/screenshots/typing.png?raw=true)
 
    * Notifications
-   ![](/screenshots/notification.png?raw=true)   
+   ![Alt text](/screenshots/notification.png?raw=true)   
 
    * Audio messages:
-   ![](/screenshots/audioMessage.png?raw=true)     
+   ![Alt text](/screenshots/audioMessage.png?raw=true)     
 ## Contacts
 My email: shafi.bahrami.2015@gmail.com

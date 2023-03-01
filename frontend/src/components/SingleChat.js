@@ -35,7 +35,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [socketConnected, setSocketConnected] = useState(false);
    const [typing, setTyping] = useState(false);
    const [isTyping, setIsTyping] = useState(false);
-   const [deliverNot, setDeliverNot] = useState(false);
    const [isListening, setIsListening] = useState(false);
    /*    const { recorderState, ...handlers } = useRecorder();
       const { audio } = recorderState; */

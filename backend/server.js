@@ -49,6 +49,11 @@ const io = require('socket.io')(server, {
 io.on("connection", (socket) => {
    //console.log("Connected to socket.io");
 
+   socket.on('online',(id)=>{
+      socket.broadcast.emit('online',id);
+      //console.log('ONLINE '+id);
+   })
+
    //creating the personal session for the user:
    socket.on("setup", () => {
       socket.emit("connected");

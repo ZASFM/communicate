@@ -3,6 +3,15 @@ export const getSender = (loggedUser, users) => {
    return users[0]._id === loggedUser._id ? users[1].name : users[0].name
 }
 
+export const checkStatus=(onlineUsers,users,loggedUser)=>{
+   const notMe=users.filter(user=>user._id!==loggedUser._id);
+   if(onlineUsers.includes(notMe[0]._id)){
+      return true
+   }else{
+      return false;
+   }
+}
+
 export const getSenderFull = (loggedUser, users) => {
    return users[0]._id === loggedUser._id ? users[1] : users[0]
 }

@@ -4,9 +4,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ChatState } from "../contexts/ChatContext";
 import ChatLoading from "./ChatLoading";
-import { getSender } from "./config/ChatLogic";
+import { getSender, checkStatus } from "./config/ChatLogic";
 import GroupChatModal from "./user/GroupChatModal";
+import io from 'socket.io-client';
 
+const ENDPOINT = 'http://localhost:5000';
+let socket;
 const MyChats = ({ fetchAgain }) => {
    const {
       user,
@@ -17,6 +20,7 @@ const MyChats = ({ fetchAgain }) => {
       setChats
    } = ChatState();
    const [loggedUser, setLoggedUser] = useState();
+   const [onlineUsers, setOnlineUsers] = useState([]);
    const toast = useToast();
 
    const fetchChat = async () => {
@@ -31,6 +35,7 @@ const MyChats = ({ fetchAgain }) => {
          const { data } = await axios.get('http://localhost:5000/api/v1/chat', config);
          //console.log(data);
          setChats(data);
+         socket.emit('online', user.user._id);
       }
       catch (err) {
          toast({
@@ -48,6 +53,17 @@ const MyChats = ({ fetchAgain }) => {
       setLoggedUser(JSON.parse(localStorage.getItem('userinfo')));
       fetchChat();
    }, [fetchAgain])
+
+   useEffect(() => {
+      socket = io(ENDPOINT);
+   }, [user])
+
+   useEffect(() => {
+      socket.on('online', (id) => {
+         setOnlineUsers(preVal => [...preVal, id]);
+      });
+      if (socket.connected) return () => socket.removeAllListeners('online');
+   })
 
    return (
       <Box
@@ -106,8 +122,17 @@ const MyChats = ({ fetchAgain }) => {
                      >
                         <Text>
                            {!chat.isGroupChat ?
-                              getSender(loggedUser.user, chat.users)
-                              : chat.chatName}
+                              (<>
+                                 {getSender(loggedUser.user, chat.users)}
+                                 {
+                                    onlineUsers === []?
+                                    null: 
+                                    (checkStatus(onlineUsers,chat.users,loggedUser.user)? <span> 🟢</span>:<span> ⚪</span>)
+                                 }
+                              </>)
+                              : (chat.chatName)
+                           }
+
                         </Text>
                         {chat.latestMessage && (
                            <Text fontSize="xs">

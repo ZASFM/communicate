@@ -35,7 +35,6 @@ const MyChats = ({ fetchAgain }) => {
          const { data } = await axios.get('http://localhost:5000/api/v1/chat', config);
          //console.log(data);
          setChats(data);
-         socket.emit('online', user.user._id);
       }
       catch (err) {
          toast({
@@ -64,6 +63,10 @@ const MyChats = ({ fetchAgain }) => {
       });
       if (socket.connected) return () => socket.removeAllListeners('online');
    })
+
+   useEffect(()=>{
+      socket.emit('online', user.user._id);
+   },[onlineUsers])
 
    return (
       <Box
@@ -128,7 +131,7 @@ const MyChats = ({ fetchAgain }) => {
                                     onlineUsers === []?
                                     null: 
                                     (checkStatus(onlineUsers,chat.users,loggedUser.user)? <span> 🟢</span>:<span> ⚪</span>)
-                                 }
+                                 } 
                               </>)
                               : (chat.chatName)
                            }

@@ -1,7 +1,7 @@
 @import './config';
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
 
-.App{
+.App {
   min-height: 100vh;
   display: flex;
   background-image: url('../background.png');
@@ -22,7 +22,7 @@
   background: #555;
 }
 
-.messages{
+.messages {
   @include flex(column);
   overflow-y: scroll;
   scrollbar-width: none;
@@ -69,8 +69,79 @@
   }
 }
 
-@for $i from 1 through 4 { 
+@for $i from 1 through 4 {
   .menu-burger_1:nth-child(#{$i}) {
     transition-delay: ($i * 0.1s) + 0.15s;
+  }
+}
+
+.cancel-button-container {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid $danger;
+  border-radius: 5px;
+  color: $danger;
+  display: flex;
+  justify-content: center;
+  @include transition-ease;
+  cursor: pointer;
+
+  &:hover {
+    color: $primary-color;
+    border-color: $primary-color;
+    background-color: $danger;
+  }
+
+  .cancel-button {
+    @include flex(row);
+    gap: 10px;
+    align-items: center;
+  }
+}
+
+.start-button-container {
+  @extend .cancel-button-container;
+  @include flex(row);
+  border: 1px solid $success;
+  color: $success;
+  margin-top: 10px;
+
+  &:hover {
+    color: $primary-color;
+    border-color: $primary-color;
+    background-color: $success;
+  }
+}
+
+.recordings-list {
+  @include flex(column);
+  justify-content: center;
+
+  .delete-button {
+    border:1px solid $danger;
+    border-radius: 5px;
+    @include transition-ease;
+    cursor: pointer;
+    color:$danger;
+    width: 100%;
+    padding:5px;
+    margin-top: 10px;
+    
+    &:hover{
+      color:$primary-color;
+      border-color: $primary-color;
+      background-color: $danger;
+    }
+  }
+
+  .send-button {
+    @extend .delete-button;
+    border-color: $success;
+    color: $success;
+
+    &:hover{
+      background-color: $success;
+    }
   }
 }

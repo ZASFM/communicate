@@ -1,6 +1,5 @@
 import useRecordingsList from '../../hooks/use-recordings-list';
 import { AiFillWarning } from 'react-icons/ai'
-import { BsFillTrashFill } from 'react-icons/bs'
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 import { ChatState } from '../../../../../contexts/ChatContext';
@@ -52,12 +51,12 @@ const RecordingsList = ({ audio }) => {
                                  title="Delete this audio"
                                  onClick={() => deleteAudio(record.key)}
                               >
-                                 <BsFillTrashFill />
+                                 Delete audio
                               </button>
                            </div>
                         </div>
                      ))}
-                     <button onClick={sendAudio}>
+                     <button className='send-button' onClick={sendAudio}>
                         Send audio
                      </button>
                   </div>
@@ -65,7 +64,7 @@ const RecordingsList = ({ audio }) => {
             ) : (
                <div className="no-records">
                   <AiFillWarning size={50} />
-                  You don't have records to send
+                  <span>You don't have records to send</span>
                </div>
             )}
          </div>

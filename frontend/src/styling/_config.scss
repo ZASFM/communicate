@@ -1,5 +1,7 @@
 //Root:
 $primary-color:#000;
+$danger:red;
+$success:green;
 
 @mixin flex($direction){
    display: flex;

@@ -10,6 +10,7 @@ const RecorderControls = ({ recorderState, handlers }) => {
             <div className="recorder-display">
                <div className="recording-time">
                   {initRecording && <div className="recording-indicator"></div>}
+                  Your recording:<span> </span>
                   <span>{formatMinutes(recordingMinutes)}</span>
                   <span>:</span>
                   <span>{formatSeconds(recordingSeconds)}</span>
@@ -17,7 +18,7 @@ const RecorderControls = ({ recorderState, handlers }) => {
                {initRecording && (
                   <div className="cancel-button-container">
                      <button className="cancel-button" title="Cancel recording" onClick={cancelRecording}>
-                        <FaTimesCircle/>
+                        <span>Cancel</span> <FaTimesCircle/>
                      </button>
                   </div>
                )}
@@ -30,11 +31,11 @@ const RecorderControls = ({ recorderState, handlers }) => {
                      disabled={recordingSeconds === 0}
                      onClick={saveRecording}
                   >
-                     Save
+                     Save audio
                   </button>
                ) : (
                   <button className="start-button" title="Start recording" onClick={startRecording}>
-                     Start
+                     Start 
                   </button>
                )}
             </div>

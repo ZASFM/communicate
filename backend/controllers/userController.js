@@ -5,6 +5,10 @@ const createToken = require('../middlewares/createToken');
 const transporter=require('../middlewares/nodeMail');
 const Chat=require('../modles/chatModal');
 
+
+// @desc    Login with an account
+// @route   POST /api/v1/user/login
+// @access  Public
 const login = asyncHandler(async (req, res, next) => {
    const { email, password } = req.body;
    try {
@@ -26,6 +30,9 @@ const login = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Create and account
+// @route   POST /api/v1/user/signup
+// @access  Public
 const signup = asyncHandler(async (req, res, next) => {
    const { name, email, password, pic } = req.body;
    try {
@@ -47,6 +54,7 @@ const signup = asyncHandler(async (req, res, next) => {
       await user.save();
 
       try{
+         //Sending email upon registration
          await transporter.sendMail({
             from: '"Registration confirmation message" <shafi.bahrami.2015@gmail.com>', 
             to: user.email, 
@@ -67,17 +75,25 @@ const signup = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Get all the users, apart from me, depending on a query search
+// @route   GET /api/v1/user/login?query
+// @access  Requires token
 const allUsers = asyncHandler(async (req, res, next) => {
    const keyword = req.query.search ? {
+      //I want to search for the users, that whether the email or the name have the search im querying for
       $or: [
          { name: { $regex: req.query.search, $options: 'i' } },
          { email: { $regex: req.query.search, $options: 'i' } }
       ]
    } : {}
+   //Upon the list I don´t want to have as chat candidate myself
    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
    res.status(200).send(users);
 })
 
+// @desc    add notification to notifications array
+// @route   POST /api/v1/user/notifications
+// @access  Requires token
 const addNotification=asyncHandler(async(req,res,next)=>{
    const {userId,messageId}=req.body;
    try{
@@ -109,6 +125,9 @@ const addNotification=asyncHandler(async(req,res,next)=>{
    }
 })
 
+// @desc    Delete notification from notifications array
+// @route   PUT /api/v1/user/notifications
+// @access  Requires token
 const removeNotification=asyncHandler(async(req,res,next)=>{
    const {userId,messageId}=req.body;
    try{
@@ -119,6 +138,9 @@ const removeNotification=asyncHandler(async(req,res,next)=>{
    }
 })
 
+// @desc    Get user´s notifications
+// @route   GET /api/v1/user/notifications/:id
+// @access  Requires token
 const getNotifications=asyncHandler(async(req,res,next)=>{
    try{
       let notifications=await User.findById(req.params.id)

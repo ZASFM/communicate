@@ -13,9 +13,13 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cors());
 mongoose.set('strictQuery', true);
+//Authentication routes handler
 app.use('/api/v1/user', userRouter);
+//Chat routes handler
 app.use('/api/v1/chat', chatRouter);
+//Message route handler
 app.use('/api/v1/message', messageRouter);
+//Error handler
 app.use((err, req, res, next) => {
    console.log(err);
    const statusCode = err.statusCode || 500;
@@ -49,12 +53,13 @@ const io = require('socket.io')(server, {
 io.on("connection", (socket) => {
    //console.log("Connected to socket.io");
 
+   //On connecting to the server broadcast make me online for others:
    socket.on('online',(id)=>{
       socket.broadcast.emit('online',id);
       //console.log('ONLINE '+id);
    })
 
-   //creating the personal session for the user:
+   //Socket successfully connected
    socket.on("setup", () => {
       socket.emit("connected");
    });
@@ -62,21 +67,21 @@ io.on("connection", (socket) => {
    //creating a personal room for the chat:
    socket.on("join chat", (room) => {
       socket.join(room);
-      //console.log("User Joined Room: " + room);
    });
 
-   //handling "typing..." status on typing
+   //on typing in the frontend, send typing to the FE, so a typing... message shows when you start typing:
    socket.on("typing", (room) => socket.in(room).emit("typing"));
+   //On stop typing, send 'stop_typing' to the FE, so the typing... message disappears
    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
-   //sending messages:
+   //sending messages + handling notifications:
    socket.on("new message", (newMessageReceived) => {
       var chat = newMessageReceived.data.chat;
 
       if (!chat.users) return;
 
       chat.users.forEach((user) => {
-         //Dont show me my own messages, two times:
+         //Don´t update my own messages array, but the others:
          if (user._id === newMessageReceived.data.sender._id) return;
 
          //Send the message back to add it to the messages array:

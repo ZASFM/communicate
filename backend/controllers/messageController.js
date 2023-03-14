@@ -4,6 +4,10 @@ const createError = require('../middlewares/createError');
 const User = require('../modles/userModal');
 const Chat = require('../modles/chatModal');
 
+
+// @desc    create a message document and update the chat it was sent to, as it´s latestMessage
+// @route   POST /api/v1/message
+// @access  Requires token
 const sendMessage = asyncHandler(async (req, res, next) => {
    const {chatId,content,isMedia}=req.body;
    try {
@@ -35,6 +39,9 @@ const sendMessage = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Get all the messages of a certain chat
+// @route   GET /api/v1/user/message/:id
+// @access  Requires token
 const allMessages = asyncHandler(async (req, res, next) => {
    try {
       const messages=await Message.find({chat:req.params.chatId}).populate(

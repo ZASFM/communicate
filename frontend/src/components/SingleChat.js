@@ -291,6 +291,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                               value={newMessage}
                               onChange={typingHandler}
                               width="90%"
+                              spellCheck="true"
                            />
                            <Box
                               display={"flex"}

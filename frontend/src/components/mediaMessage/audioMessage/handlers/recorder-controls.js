@@ -15,5 +15,5 @@ export const startRecording = async (setRecorderState) => {
 }
 
 export const saveRecording = (recorder) => {
-   if (recorder.state !== 'inactive') recorder.stop();
+   /* if (recorder.state !== 'inactive')  */recorder.stop();
 }

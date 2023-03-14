@@ -3,7 +3,10 @@ const Chat = require('../modles/chatModal');
 const createError = require('../middlewares/createError');
 const User = require('../modles/userModal');
 
-//Create a chat if is does not exists and if it exists return he already existing chat 
+
+// @desc    Create a chat if is does not exists, and if it exists return he already existing chat (no group chats)
+// @route   POST /api/v1/user/chat
+// @access  Requires token
 const accessChat = asyncHandler(async (req, res, next) => {
    const { userId } = req.body;
    try {
@@ -12,6 +15,7 @@ const accessChat = asyncHandler(async (req, res, next) => {
       }
       var isChat = await Chat.find({
          isGroupChat: false,
+         // I was obligatory the chat to have both my user id, and the id of the other user I have a chat with
          $and: [
             { users: { $elemMatch: { $eq: req.user._id } } },
             { users: { $elemMatch: { $eq: userId } } },
@@ -50,9 +54,13 @@ const accessChat = asyncHandler(async (req, res, next) => {
       next(createError(400, 'Could not access chat'))
    }
 })
-//fetch my chats
+
+// @desc   Fetch all my chats
+// @route   GET /api/v1/user/chat
+// @access  Requires token
 const fetchChat = asyncHandler(async (req, res, next) => {
    try {
+      //I want all those chats to have my id in the users array
       Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
          .populate('users', '-password')
          .populate('groupAdmin', '-password')
@@ -71,6 +79,9 @@ const fetchChat = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Create a group chat
+// @route   POST /api/v1/chat/group
+// @access  Requires token
 const createGroupChat = asyncHandler(async (req, res, next) => {
    if (!req.body.users || !req.body.name) {
       return res.status(400).json({ success: false, msg: 'All fields must be filled' });
@@ -83,7 +94,6 @@ const createGroupChat = asyncHandler(async (req, res, next) => {
    //adding myself a a user
    users.push(req.user);
 
-   //creating a chat
    try {
       const groupChat = new Chat({
          chatName: req.body.name,
@@ -105,6 +115,9 @@ const createGroupChat = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Rename the title of the group chat
+// @route   PUT /api/v1/user/rename
+// @access  Requires token + only admin
 const renameGroup = asyncHandler(async (req, res, next) => {
    const { chatId, chatName } = req.body;
    try {
@@ -118,6 +131,9 @@ const renameGroup = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Remove a member form a group chat
+// @route   PUT /api/v1/user/groupremove
+// @access  Requires token + only admin
 const removeFromGroup = asyncHandler(async (req, res, next) => {
    const { chatId, userId } = req.body;
    try {
@@ -133,6 +149,9 @@ const removeFromGroup = asyncHandler(async (req, res, next) => {
    }
 })
 
+// @desc    Add a member to a group chat
+// @route   PUT /api/v1/user/groupadd
+// @access  Requires token + only admin
 const addToGroup = asyncHandler(async (req, res, next) => {
    const { chatId, userId } = req.body;
    try {

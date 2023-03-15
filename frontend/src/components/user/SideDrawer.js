@@ -48,6 +48,7 @@ const SideDrawer = ({fetchAgain,setFetchAgain}) => {
       navigate('/');
    }
 
+   //handles function searching for users that have same email/name with my query
    const handleSearch = async () => {
       if (!search) {
          toast({
@@ -98,6 +99,7 @@ const SideDrawer = ({fetchAgain,setFetchAgain}) => {
             }
          }
 
+         //retrieving the existing chat with the user that has userId, or creating a new one if it does noes exists
          const { data } = await axios.post('http://localhost:5000/api/v1/chat', { userId }, config)
          if (!chats.find(item => item._id === data.id)) setChats([data, ...chats]);
          setSelectedChat(data);
@@ -118,6 +120,7 @@ const SideDrawer = ({fetchAgain,setFetchAgain}) => {
    }
 
    useEffect(()=>{
+      //fetching all my notifications
       const fetchNotifications=async()=>{
          const myId=JSON.parse(localStorage.getItem('userinfo')).user._id;
          try{ 
@@ -128,8 +131,10 @@ const SideDrawer = ({fetchAgain,setFetchAgain}) => {
          }
       }
       fetchNotifications();
+      //this function will be triggered everytime i manually set my frontend to refetch queries back again, and on sending any notifications i will refetch again
    },[fetchAgain])
    
+   //removing notification from db
    const removeNotifications=async(notificationId)=>{
       try{
          const config={
@@ -190,8 +195,11 @@ const SideDrawer = ({fetchAgain,setFetchAgain}) => {
                         <MenuItem
                            key={n._id}
                            onClick={() => {
+                              //making my chat be the chat that im seeing
                               setSelectedChat(n.chat);
+                              //removing chat from notifications array on db
                               removeNotifications(n._id);
+                              //removing notification on frontend
                               setNotifications1(notifications1.filter(no => no !== n));
                            }}
                         >

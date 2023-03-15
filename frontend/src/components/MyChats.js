@@ -24,7 +24,6 @@ const MyChats = ({ fetchAgain }) => {
    const toast = useToast();
 
    const fetchChat = async () => {
-      //console.log(user);
       try {
          const config = {
             headers: {
@@ -33,7 +32,6 @@ const MyChats = ({ fetchAgain }) => {
          }
 
          const { data } = await axios.get('http://localhost:5000/api/v1/chat', config);
-         //console.log(data);
          setChats(data);
       }
       catch (err) {
@@ -57,6 +55,7 @@ const MyChats = ({ fetchAgain }) => {
       socket = io(ENDPOINT);
    }, [user])
 
+   //whenever someone enters the application with emit and online message, here im listning foe those emitters, and adding the id of the user, to my online users array and changing the status to green
    useEffect(() => {
       socket.on('online', (id) => {
          setOnlineUsers(preVal => [...preVal, id]);

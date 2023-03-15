@@ -7,6 +7,7 @@ import { useState } from "react";
 
 const ChatPage = () => {
   const { user } = ChatState();
+  //by changing this state my frontend will refetch queries back again, (manual reload)
   const [fetchAgain, setFetchAgain] = useState(false);
 
   return (

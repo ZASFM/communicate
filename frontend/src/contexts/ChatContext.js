@@ -1,13 +1,16 @@
 import { useContext, createContext, useState, useEffect } from 'react';
-import { json, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
+   //user is the logged in user
    const [user, setUser] = useState();
+   //will be the chat that im currently in:
    const [selectedChat, setSelectedChat] = useState();
+   //list of the chats that I have been initiating so far
    const [chats, setChats] = useState([]);
+   //List of the notifications of the logged in user
    const [notifications, setNotifications] = useState([]);
-   const [filterChat,setFilterChat]=useState([]);
 
    useEffect(() => {
       const userInfo = JSON.parse(localStorage.getItem('userinfo'));
@@ -17,10 +20,6 @@ const ChatProvider = ({ children }) => {
          <Navigate to="/" />
       }
    }, [])
-
-/*    useEffect(()=>{
-      const filterId=selectedChat.users.filter(User=>User._id!==user.user._id);;
-   },[selectedChat]) */
 
    return (
       <ChatContext.Provider

@@ -13,7 +13,7 @@ const Chat = ({ messages }) => {
                key={m._id}
                style={{ display: "flex" }}
             >
-               {/*Checking if is is the last message of the user*/}
+               {/*Checking if is the last message of the user*/}
                {(
                   isSameSender(messages, m, i, user.user._id) || isLastMessage(messages, i, user.user._id)
                ) && (

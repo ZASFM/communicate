@@ -35,9 +35,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
    const [socketConnected, setSocketConnected] = useState(false);
    const [typing, setTyping] = useState(false);
    const [isTyping, setIsTyping] = useState(false);
-   const [isListening, setIsListening] = useState(false);
-   /*    const { recorderState, ...handlers } = useRecorder();
-      const { audio } = recorderState; */
+
    const navigate = useNavigate();
 
    const { user, selectedChat, setSelectedChat, notifications, setNotifications } = ChatState();
@@ -134,11 +132,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }, timerLength)
    }
 
-   const addNotification = async (message,chat) => {
+   const addNotification = async (message, chat) => {
       const filterId = chat.users.filter(User => User._id === user.user._id);
-/*             console.log('------');
-            console.log( filterId[0]._id);
-            console.log(message._id); */
+      /*             console.log('------');
+                  console.log( filterId[0]._id);
+                  console.log(message._id); */
       try {
          await axios.post('http://localhost:5000/api/v1/user/notifications', {
             userId: filterId[0]._id,
@@ -172,7 +170,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          //throw a notification, when im not in the selected chat that:
          if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.newMessageReceived.chat._id) {
             if (!notifications.includes(newMessageReceived.newMessageReceived)) {
-               addNotification(newMessageReceived.newMessageReceived,newMessageReceived.chat);
+               addNotification(newMessageReceived.newMessageReceived, newMessageReceived.chat);
                setNotifications([newMessageReceived.newMessageReceived, ...notifications]);
                setFetchAgain(!fetchAgain);
             }
@@ -180,37 +178,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          } else {
             setMessages([...messages, newMessageReceived.newMessageReceived]);
             //console.log(messages);
-         }
+         } 
       });
-      if(socket.connected) return ()=>socket.removeAllListeners('message received');
+      if (socket.connected) return () => socket.removeAllListeners('message received');
    })
-
-   const handleListen = () => {
-      if (isListening) {
-         mic.start();
-         mic.onend = () => {
-            mic.start();
-         }
-      } else {
-         mic.stop();
-         mic.onend = () => {
-            console.log('Mic stopped');
-         }
-      }
-
-      mic.onresult = (e) => {
-         const transcript = Array.from(e.results)
-            .map(results => results[0])
-            .map(result => result.transcript)
-            .join('');
-         setNewMessage(transcript);
-         mic.onerror = (e) => console.log(e.error);
-      }
-   }
-
-   useEffect(() => {
-      handleListen();
-   }, [isListening])
 
    return (
       <>
@@ -293,30 +264,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                               width="90%"
                               spellCheck="true"
                            />
-                           <Box
-                              display={"flex"}
-                              justifyContent="center"
-                              alignItems="center"
-                              bg={"yellow.100"}
-                              padding="10px"
-                              rounded="lg"
-                              onClick={() => setIsListening(preVal => !preVal)}
-                              cursor="pointer"
-                           >
-                              {isListening ? 'Listening...' : <BsMicFill />}
-                           </Box>
+                           <SendAudioModal>
+                              <Button
+                                 rightIcon={<BsMicFill />}
+                                 padding="5px"
+                              >
+                                 Send
+                              </Button>
+                           </SendAudioModal>
                         </div>
                      </FormControl>
-                     <SendAudioModal>
-                        <Button
-                           rightIcon={<BsMicFill />}
-                           padding="5px"
-                        >
-                           Send
-                        </Button>
-                     </SendAudioModal>
-                     {/*                      <RecorderControls recorderState={recorderState} handlers={handlers} />
-                     <RecordingsList audio={audio} /> */}
                   </Box>
                </>
             ) : (

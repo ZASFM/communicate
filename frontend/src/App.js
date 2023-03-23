@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ChatPage from './pages/ChatPage';
 import Calls from './components/Calls';
+import CalendarComp from './pages/Calendar';
 
 const App = () => {
   return (
@@ -23,6 +24,10 @@ const App = () => {
             element={<Calls />}
           />
         </Route>
+        <Route
+            path='/calendar/:id'
+            element={<CalendarComp/>}
+          />
       </Routes>
     </div>
   );

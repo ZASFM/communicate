@@ -145,3 +145,14 @@
 .recordings-list .send-button:hover {
   background-color: green;
 }/*# sourceMappingURL=index.css.map */
+
+.height600{
+  height: 600px;
+  background-color: white;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding:100px;
+}

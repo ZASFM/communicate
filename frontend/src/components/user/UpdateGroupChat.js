@@ -15,6 +15,7 @@ import { useState } from "react";
 import { ChatState } from "../../contexts/ChatContext";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
+import { Link } from "react-router-dom";
 
 const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
    const { isOpen, onOpen, onClose } = useDisclosure();
@@ -241,6 +242,11 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
                <ModalFooter>
                   <Button onClick={() => handleRemove(user)} colorScheme="red">
                      Leave Group
+                  </Button>
+                  <Button variant='ghost'>
+                     <Link to={`/calendar/${selectedChat._id}`}>
+                        Calendar
+                     </Link>
                   </Button>
                </ModalFooter>
             </ModalContent>

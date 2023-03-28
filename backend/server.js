@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/userRoute');
 const chatRouter = require('./routes/chatRouter');
 const messageRouter = require('./routes/messageRoute');
+const calendarRouter=require('./routes/CalendarRoute');
 const cors = require('cors');
 
 const app = express();
@@ -19,6 +20,8 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/chat', chatRouter);
 //Message route handler
 app.use('/api/v1/message', messageRouter);
+//Calendar and events router
+app.use('/api/v1/calendar',calendarRouter);
 //Error handler
 app.use((err, req, res, next) => {
    console.log(err);

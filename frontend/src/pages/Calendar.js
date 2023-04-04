@@ -11,22 +11,15 @@ import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import {
-  VStack,
-  FormControl,
-  Input,
-  Button,
-  Text,
   Box,
-  StackDivider,
   useToast
 } from '@chakra-ui/react';
 import axios from "axios";
 import { ChatState } from "../contexts/ChatContext";
+import AddEventModal from "../components/user/AddEventModal";
+import { CalendarIcon } from '@chakra-ui/icons'
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const CalendarComp = () => {
@@ -38,6 +31,7 @@ const CalendarComp = () => {
     chat_id: '',
     users: []
   });
+  const [myEvents, setMyEvents] = useState([]);
   const { user, selectedChat } = ChatState();
   const locales = {
     "en-US": require("date-fns/locale/en-US")
@@ -49,9 +43,8 @@ const CalendarComp = () => {
     getDay,
     locales
   });
+  const defaultDate = useMemo(() => new Date(), []);
 
-  
-  const [myEvents, setMyEvents] = useState([]);
 
   const submitEvent = async () => {
     console.log(newEvent);
@@ -174,34 +167,20 @@ const CalendarComp = () => {
     });
   }
 
-
-  const defaultDate = useMemo(() => new Date(), []);
-
   return (
-    <VStack
-      divider={<StackDivider borderColor="blackAlpha.400" />}
-      spacing={4}
+    <div 
+       style={{position:'relative'}}
     >
-      <Text
-        fontSize="lg"
-        padding="5px"
-        borderRadius="5px"
-        textAlign="center"
-        marginTop="10px"
-        style={{
-          backgroundColor: "white"
-        }}
+      <AddEventModal
+         newEvent={newEvent}
+         setNewEvent={setNewEvent}
+         submitEvent={submitEvent}
       >
-        Showing calender for chat: {`${selectedChat.groupChatName}`}
-      </Text>
+        <CalendarIcon cursor="pointer"/>
+      </AddEventModal>
       <Box
-        display="flex"
-        justifyContent="space-between"
-        gap="100px"
-        alignItems="center"
-        w="100%"
-        p="100px"
-        height="700px"
+        w="100vw"
+        height="100%"
       >
         <DragAndDropCalendar
           defaultDate={defaultDate}
@@ -216,53 +195,12 @@ const CalendarComp = () => {
             backgroundColor: 'white',
             borderRadius: '5px',
             height: '100%',
-            width: '700px',
+            width: '100%',
             boxShadow: '5px 10px #888888'
           }}
         />
-        <FormControl
-          style={{
-            backgroundColor: 'white'
-          }}
-          padding="10px"
-          width="35%"
-        >
-          <Input
-            type="text"
-            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-            placeholder="Add event title"
-            marginBottom="10px"
-          />
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            gap="20px"
-            marginX="auto"
-            border="1px"
-            borderColor="blackAlpha.400"
-            marginBottom="10px"
-            borderRadius="5px"
-          >
-            <DatePicker
-              selected={newEvent.start}
-              onChange={(start) => setNewEvent({ ...newEvent, start:new Date(Date.parse(start)) })}
-              placeholderText="Start date"
-            />
-            <DatePicker
-              selected={newEvent.end}
-              onChange={(end) => setNewEvent({ ...newEvent, end:new Date(Date.parse(end))})}
-              placeholderText="End date"
-            />
-          </Box>
-          <Button
-            onClick={submitEvent}
-            colorScheme='teal'
-          >
-            Add
-          </Button>
-        </FormControl>
       </Box>
-    </VStack>
+    </div>
   );
 }
 

@@ -37,6 +37,7 @@ const updateEvent=asyncHandler(async(req,res,next)=>{
       ).populate('chat_id');
       res.status(200).json(event);
    }catch(err){
+      console.log(err);
       next(createError(400,'Could not update event'));
    }
 })

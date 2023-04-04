@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import {
   Calendar,
   Views,
@@ -22,21 +22,23 @@ import {
   Button,
   Text,
   Box,
-  StackDivider
+  StackDivider,
+  useToast
 } from '@chakra-ui/react';
 import axios from "axios";
 import { ChatState } from "../contexts/ChatContext";
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const CalendarComp = () => {
+  const toast = useToast();
   const [newEvent, setNewEvent] = useState({
     title: '',
     start: '',
     end: '',
-    chatId: '',
+    chat_id: '',
     users: []
   });
-  const {selectedChat}=ChatState();
+  const { user, selectedChat } = ChatState();
   const locales = {
     "en-US": require("date-fns/locale/en-US")
   };
@@ -48,36 +50,115 @@ const CalendarComp = () => {
     locales
   });
 
-  const events = [
-    {
-      title: "Big Meeting",
-      start: new Date(2023, 3, 1),
-      end: new Date(2023, 3, 3)
-    },
-    {
-      title: "Vacation",
-      start: new Date(2023, 3, 1),
-      end: new Date(2023, 3, 10)
-    },
-    {
-      title: "Conference",
-      start: new Date(2023, 3, 20),
-      end: new Date(2023, 3, 23)
-    }
-  ];
+  
+  const [myEvents, setMyEvents] = useState([]);
 
-  const [myEvents, setMyEvents] = useState(events);
+  const submitEvent = async () => {
+    console.log(newEvent);
+    setMyEvents([...myEvents,newEvent]);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          'Content-Type': 'application/json',
+        }
+      }
+      const { data } = await axios.post('http://localhost:5000/api/v1/calendar', {
+        title: newEvent.title,
+        chat_id: selectedChat._id,
+        users: selectedChat.users.map(user => {
+          return user._id
+        }),
+        start: newEvent.start,
+        end: newEvent.end
+      }, config);
+
+      if (data) {
+        setMyEvents([...myEvents, 
+          {...data, 
+            start:new Date(Date.parse(data.start)),
+            end:new Date(Date.parse(data.end))
+          }
+        ]);
+      }
+    } catch (err) { 
+      toast({
+        title: "Error Occured!",
+        description: "Failed to post event",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }
+
+  const fetchEvents = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+      }
+      const { data } = await axios.get(`http://localhost:5000/api/v1/calendar/get/${selectedChat._id}`, config);
+      if (data) {
+        const events = data.map(ev => {
+          return {
+            id: ev._id,
+            title: ev.title,
+            start: new Date(Date.parse(ev.start)),
+            end: new Date(Date.parse(ev.end))
+          }
+        });
+        console.log(events);
+        setMyEvents(events);
+      }
+    } catch (err) {
+      toast({
+        title: "Error Occured!",
+        description: "Failed to get events",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const updateEvents=async(eventId,start,end)=>{
+    try{
+      const config={
+        headers:{
+          Authorization:`Bearer ${user.token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+      await axios.put(`http://localhost:5000/api/v1/calendar/update/${eventId}`,{
+        start,
+        end
+      },config);
+    }catch(err){
+      toast({
+        title: "Error Occured!",
+        description: "Failed to update event",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }
 
   const moveEvent = useCallback(
-    ({ event, start, end}) => {
-/*       const { allDay } = event;
-      if (!allDay && droppedOnAllDaySlot) {
-        event.allDay = true;
-      }
- */
+    ({ event, start, end }) => {
       setMyEvents((prev) => {
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
+        updateEvents(event.id,start,end);
         return [...filtered, { ...existing, start, end }];
       });
     },
@@ -85,109 +166,102 @@ const CalendarComp = () => {
   );
 
   const resizeEvent = ({ event, start, end }) => {
-      setMyEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id);
-        const filtered = prev.filter((ev) => ev.id !== event.id);
-        return [...filtered, { ...existing, start, end }];
-      });
-    }
+    setMyEvents((prev) => {
+      const existing = prev.find((ev) => ev.id === event.id);
+      const filtered = prev.filter((ev) => ev.id !== event.id);
+      updateEvents(event.id,start,end);
+      return [...filtered, { ...existing, start, end }];
+    });
+  }
 
 
   const defaultDate = useMemo(() => new Date(), []);
 
-  const submitEvent = async () => {
-    try {
-       setMyEvents(preVal=>[...preVal,newEvent])
-    } catch (err) {
-       console.log(err);
-    }  
-  }
-
   return (
     <VStack
-    divider={<StackDivider borderColor="blackAlpha.400" />}
-    spacing={4}
+      divider={<StackDivider borderColor="blackAlpha.400" />}
+      spacing={4}
     >
-    <Text 
-       fontSize="lg" 
-       padding="5px"
-       borderRadius="5px"
-       textAlign="center"
-       marginTop="10px"
-       style={{
-          backgroundColor:"white"
-       }}
-    >
-      Showing calender for chat: {`${selectedChat.groupChatName}`}
-    </Text>
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      gap="100px"
-      alignItems="center"
-      w="100%"
-      p="100px"
-      height="700px"
-    >
-      <DragAndDropCalendar
-        defaultDate={defaultDate}
-        defaultView={Views.MONTH}
-        events={myEvents}
-        localizer={localizer}
-        onEventDrop={moveEvent}
-        onEventResize={resizeEvent}
-        popup
-        resizable
+      <Text
+        fontSize="lg"
+        padding="5px"
+        borderRadius="5px"
+        textAlign="center"
+        marginTop="10px"
         style={{
-          backgroundColor: 'white',
-          borderRadius: '5px',
-          height: '100%',
-          width: '700px',
-          boxShadow: '5px 10px #888888'
+          backgroundColor: "white"
         }}
-      />
-      <FormControl
-        style={{
-          backgroundColor: 'white'
-        }}
-        padding="10px"
-        width="35%"
       >
-        <Input
-          type="text"
-          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-          placeholder="Add event title"
-          marginBottom="10px"
+        Showing calender for chat: {`${selectedChat.groupChatName}`}
+      </Text>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        gap="100px"
+        alignItems="center"
+        w="100%"
+        p="100px"
+        height="700px"
+      >
+        <DragAndDropCalendar
+          defaultDate={defaultDate}
+          defaultView={Views.MONTH}
+          events={myEvents}
+          localizer={localizer}
+          onEventDrop={moveEvent}
+          onEventResize={resizeEvent}
+          popup
+          resizable
+          style={{
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            height: '100%',
+            width: '700px',
+            boxShadow: '5px 10px #888888'
+          }}
         />
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          gap="20px"
-          marginX="auto"
-          border="1px"
-          borderColor="blackAlpha.400"
-          marginBottom="10px"
-          borderRadius="5px"
+        <FormControl
+          style={{
+            backgroundColor: 'white'
+          }}
+          padding="10px"
+          width="35%"
         >
-          <DatePicker
-            selected={newEvent.start}
-            onChange={(start) => setNewEvent({ ...newEvent, start })}
-            placeholderText="Start date"
+          <Input
+            type="text"
+            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+            placeholder="Add event title"
+            marginBottom="10px"
           />
-          <DatePicker
-            selected={newEvent.end}
-            onChange={(end) => setNewEvent({ ...newEvent, end })}
-            placeholderText="End date"
-          />
-        </Box>
-        <Button
-          onClick={submitEvent}
-          colorScheme='teal'
-        >
-          Add
-        </Button>
-      </FormControl>
-    </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            gap="20px"
+            marginX="auto"
+            border="1px"
+            borderColor="blackAlpha.400"
+            marginBottom="10px"
+            borderRadius="5px"
+          >
+            <DatePicker
+              selected={newEvent.start}
+              onChange={(start) => setNewEvent({ ...newEvent, start:new Date(Date.parse(start)) })}
+              placeholderText="Start date"
+            />
+            <DatePicker
+              selected={newEvent.end}
+              onChange={(end) => setNewEvent({ ...newEvent, end:new Date(Date.parse(end))})}
+              placeholderText="End date"
+            />
+          </Box>
+          <Button
+            onClick={submitEvent}
+            colorScheme='teal'
+          >
+            Add
+          </Button>
+        </FormControl>
+      </Box>
     </VStack>
   );
 }

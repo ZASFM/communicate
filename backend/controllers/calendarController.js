@@ -30,10 +30,10 @@ const getEvents=asyncHandler(async(req,res,next)=>{
 })
 
 const updateEvent=asyncHandler(async(req,res,next)=>{
-   const {start,end,title}=req.body;
+   const {start,end}=req.body;
    try{ 
       let event=await Calendar.findByIdAndUpdate(
-         req.params.id,{$set:{start,end,title}},{new:true}
+         req.params.id,{$set:{start,end}},{new:true}
       ).populate('chat_id');
       res.status(200).json(event);
    }catch(err){

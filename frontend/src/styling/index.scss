@@ -145,3 +145,29 @@
     }
   }
 }
+
+.calendar{
+  position: absolute;
+  top: -2.70rem;
+  right: 45%;
+  @include transition-ease;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover{
+    top:0.2rem;
+    .calendar_icon{
+      color: purple;
+    }
+  }
+
+  .calendar_icon{
+    border: 1px solid yellow;
+    border-radius: 5px;
+    padding:0.5rem 6rem;
+    background-color: yellow;
+
+  }
+}

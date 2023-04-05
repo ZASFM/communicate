@@ -175,12 +175,13 @@ const CalendarComp = () => {
          newEvent={newEvent}
          setNewEvent={setNewEvent}
          submitEvent={submitEvent}
+         selectedChat={ChatState().selectedChat}
       >
-        <CalendarIcon cursor="pointer"/>
+        <CalendarIcon cursor="pointer" w={8} h={8}/>
       </AddEventModal>
       <Box
         w="100vw"
-        height="100%"
+        height="100vh"
       >
         <DragAndDropCalendar
           defaultDate={defaultDate}

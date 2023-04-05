@@ -144,15 +144,27 @@
 }
 .recordings-list .send-button:hover {
   background-color: green;
-}/*# sourceMappingURL=index.css.map */
+}
 
-/* .height600{
-  height: 600px;
-  background-color: white;
+.calendar {
+  position: absolute;
+  top: -2.7rem;
+  right: 45%;
+  transition: all 0.5s ease-in-out;
+  z-index: 1;
   display: flex;
-  width: 100vw;
-  height: 100vh;
   justify-content: center;
   align-items: center;
-  padding:100px;
-} */
+}
+.calendar:hover {
+  top: 0.2rem;
+}
+.calendar:hover .calendar_icon {
+  color: purple;
+}
+.calendar .calendar_icon {
+  border: 1px solid yellow;
+  border-radius: 5px;
+  padding: 0.5rem 6rem;
+  background-color: yellow;
+}/*# sourceMappingURL=index.css.map */

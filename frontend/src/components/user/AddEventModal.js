@@ -17,14 +17,16 @@ import {
 } from '@chakra-ui/react'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { ChatContext } from "../../contexts/ChatContext";
 
-const AddEventModal = ({ newEvent, setNewEvent, submitEvent, children }) => {
+const AddEventModal = ({ newEvent, setNewEvent, submitEvent,selectedChat, children }) => {
    const { isOpen, onOpen, onClose } = useDisclosure();
+
    return (
       <div
-         style={{position:'absolute', top:'1rem', right:'1rem'}}
+         className="calendar"
       >
-         <span onClick={onOpen}>{children}</span>
+         <span className="calendar_icon" onClick={onOpen}>{children}</span>
          <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
@@ -32,13 +34,13 @@ const AddEventModal = ({ newEvent, setNewEvent, submitEvent, children }) => {
                <ModalCloseButton />
                <ModalBody>
                   <VStack
-                     divider={<StackDivider borderColor='gray.200' />}
+                     divider={<StackDivider borderColor='blackAlpha.300' />}
                      spacing={4}
                      align='stretch'
                   >
                      <Text
                      >
-                        Showing calender for chat: {`name`}
+                        Showing calender for chat: {`${selectedChat.chatName}`}
                      </Text>
                      <FormControl
                         style={{

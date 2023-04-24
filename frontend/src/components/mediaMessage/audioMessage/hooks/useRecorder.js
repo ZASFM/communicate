@@ -63,18 +63,17 @@ const useRecorder=()=>{
    useEffect(()=>{
       const recorder=recorderState.mediaRecorder;
       let chunks=[];
-      console.log(chunks);
 
       if(recorder && recorder.state==='inactive'){
          recorder.start();
 
          recorder.ondataavailable=(e)=>{
             chunks.push(e.data);
-            console.log(chunks);
          }
 
          recorder.onstop=()=>{
-            const blob= new Blob(chunks,{type: "audio/webm; codecs=opus"});
+            const blob= new Blob(chunks,{type: "audio/wav"});
+
             chunks=[];
             setRecorderState(preState=>{
                if(preState.mediaRecorder){

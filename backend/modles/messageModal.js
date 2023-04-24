@@ -16,6 +16,10 @@ const messageModal = mongoose.Schema({
    isMedia:{
       type:Boolean,
       default:false
+   },
+   buffer:{
+      type:Buffer,
+      default:null
    }
 }, {
    timestamps: true

@@ -6,6 +6,14 @@ import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from './c
 const Chat = ({ messages }) => {
    const { user } = ChatState();
 
+   const binaryToBlob = async (binary) => {
+      const uint8Array = Uint8Array.from(binary);
+      const blob = new Blob([uint8Array], { type: 'audio/wav' });
+      const blobUrl = URL.createObjectURL(blob);
+      console.log(blobUrl);
+      return blobUrl;
+   }
+
    return (
       <ScrollableFeed>
          {messages && messages.map((m, i) => (
@@ -44,11 +52,13 @@ const Chat = ({ messages }) => {
                   }}
                >
                   {
-                     !m.isMedia?
-                     (<span>{m.content}</span>):
-                     (
-                        <audio controls src={m.content} type="audio/webm"/>
-                     )
+                     !m.isMedia ?
+                        (<span>{m.content}</span>) :
+                        (
+                           <audio controls>
+                              <source src={binaryToBlob(m.buffer)} type="audio/mpeg"/>
+                           </audio>
+                        )
 
                   }
                </span>

@@ -3,23 +3,25 @@ const asyncHandler = require('express-async-handler');
 const createError = require('../middlewares/createError');
 const User = require('../modles/userModal');
 const Chat = require('../modles/chatModal');
+const {Buffer}=require('buffer');
 
 
 // @desc    create a message document and update the chat it was sent to, as it´s latestMessage
 // @route   POST /api/v1/message
 // @access  Requires token
 const sendMessage = asyncHandler(async (req, res, next) => {
-   const {chatId,content,isMedia}=req.body;
+   const {chatId,content,isMedia,buffer:b}=req.body;
    try {
      if(!chatId||!content){
       next(createError(401,'Missing parameters'));
      }
-   
+
      var newMessage={
       sender:req.user._id,
-      content:content,
+      content,
       chat:chatId,
-      isMedia
+      isMedia,
+      buffer:b?b:null
      }
 
       var message=new Message(newMessage);
@@ -36,6 +38,7 @@ const sendMessage = asyncHandler(async (req, res, next) => {
       res.status(200).json(message);
    } catch (err) {
       next(createError(401,'Could not post message'));
+      console.log(err);
    }
 })
 

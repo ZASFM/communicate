@@ -3,11 +3,20 @@ import { AiFillWarning } from 'react-icons/ai'
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 import { ChatState } from '../../../../../contexts/ChatContext';
+import {Buffer} from 'buffer';
 
 const RecordingsList = ({ audio }) => {
    const { recordings, deleteAudio } = useRecordingsList(audio);
    const { user, selectedChat } = ChatState();
    const toast=useToast();
+
+   const getUint8ArrayFromBlobUrl= async (blobUrl) => {
+      const response = await fetch(blobUrl);
+      const blob = await response.blob();
+      const arrayBuffer = await new Response(blob).arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      return uint8Array;
+   }
 
    const sendAudio = async () => {
       try {
@@ -18,10 +27,13 @@ const RecordingsList = ({ audio }) => {
             }
          };
 
-         const { data } = await axios.post('http://localhost:5000/api/v1/message', {
-            content: recordings[0].audio,
+         const Uint8A=await getUint8ArrayFromBlobUrl(recordings[0].audio);
+         const buffer=Buffer.from(Uint8A)
+         await axios.post('http://localhost:5000/api/v1/message', {
+            content: 'Audio Message',
             chatId: selectedChat._id,
-            isMedia: true
+            isMedia: true,
+            buffer
          }, config);
       } catch (err) {
          toast({
@@ -32,6 +44,7 @@ const RecordingsList = ({ audio }) => {
             isClosable: true,
             position: "bottom",
          });
+         console.log(err);
       }
    }
 

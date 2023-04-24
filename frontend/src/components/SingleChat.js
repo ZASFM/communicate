@@ -134,9 +134,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
    const addNotification = async (message, chat) => {
       const filterId = chat.users.filter(User => User._id === user.user._id);
-      /*             console.log('------');
-                  console.log( filterId[0]._id);
-                  console.log(message._id); */
       try {
          await axios.post('http://localhost:5000/api/v1/user/notifications', {
             userId: filterId[0]._id,
